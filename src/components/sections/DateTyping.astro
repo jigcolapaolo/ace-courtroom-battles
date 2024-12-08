@@ -1,0 +1,48 @@
+<section class="mx-auto flex flex-col justify-center items-center text-center">
+    <div class="mt-8">
+        <div class="bg-blue-950 opacity-70 animate-fade-in animate-delay-300 rounded-md border-2 border-secondary h-32 grid place-items-center">
+            <script is:inline>
+                const now = new Date();
+
+                const day = now.getDate();
+                const month = now.toLocaleString('en-US', { month: 'long' });
+
+                const time = now.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                const result = `${month} ${day}, ${time}`;
+
+                const selfScript = document.currentScript;
+                selfScript.parentNode.innerHTML = `
+                    <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=2000&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
+                `;
+            </script>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-medium flex max-w-sm flex-col mt-20 uppercase">
+        <span>Presentation Event</span>
+        <span>District Court</span>
+    </h3>
+
+    <a 
+        class={`
+            border-primary border-2 font-medium uppercase text-lg
+            px-4 py-1 mt-8
+            hover:bg-slate-300 hover:scale-125 transition inline-block
+        `}
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        Sold out
+    </a>
+
+
+
+
+
+    <audio src="/ace-typing.mp3" autoplay ></audio>
+</section>

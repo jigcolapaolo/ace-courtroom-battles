@@ -1,0 +1,11 @@
+---
+interface Props {
+    className?: string
+}
+
+const { className } = Astro.props
+---
+
+<picture class={className}>
+    <img src="/ace-logo.webp" alt="Ace Logo" class="w-full h-full" />
+</picture>

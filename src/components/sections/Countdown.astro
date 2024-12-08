@@ -1,0 +1,100 @@
+---
+import CountdownPart from "./CountdownPart.astro"
+
+const TIMESTAMP_END = 1735084800000
+
+const timeTypes = [
+    { type: "days" },
+    { type: "hours" },
+    { type: "minutes" },
+    { type: "seconds" },
+]
+---
+
+<section class="my-32 flex flex-col gap-y-10 justify-center items-center">
+    <picture class="w-40 h-40">
+        <img src="/attorney-badge.webp" alt="Attorney Badge" class="w-full h-full attorney-badge" />
+    </picture>
+
+    
+    <h3 class="text-2xl font-medium flex max-w-sm flex-col uppercase">
+        <span>🎄Days to Christmas!🎄</span>
+    </h3>
+
+    <div class="flex flex-row gap-x-1 text-primary uppercase font-semibold" data-date={TIMESTAMP_END}>
+        {
+            timeTypes.map((timeType) => (
+                <CountdownPart timeType={timeType.type} />
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .attorney-badge {
+        view-timeline-name: --badgeZoom;
+        view-timeline-axis: block;
+
+        animation-timeline: --badgeZoom;
+        animation-name: zoomBadge;
+    }
+
+    @keyframes zoomBadge {
+        to {
+            transform: scale(1.2);
+        }
+    }
+</style>
+
+<script>
+    const SECOND = 1000
+    const MINUTE = SECOND * 60
+    const HOUR = MINUTE * 60
+    const DAY = HOUR * 24
+
+    function init () {
+        const $countdown = document.querySelector('[data-date]')
+        if (!$countdown) return
+
+        const $days = $countdown.querySelector('[data-days]')
+        const $hours = $countdown.querySelector('[data-hours]')
+        const $minutes = $countdown.querySelector('[data-minutes]')
+        const $seconds = $countdown.querySelector('[data-seconds]')
+
+        const timestamp = $countdown.getAttribute('data-date')
+        if (!timestamp) return
+
+        const date = new Date(+timestamp).getTime()
+
+        const formatTime = (time: number) => {
+            return Math.floor(time).toString().padStart(2, '0')
+        }
+
+        function updateCountdown () {
+            const now = Date.now()
+            const diff = date - now
+
+            if ($days instanceof HTMLElement) {
+                $days.innerText = formatTime(diff / DAY)
+            }
+
+            if ($hours instanceof HTMLElement) {
+                $hours.innerText = formatTime((diff % DAY) / HOUR)
+            }
+
+            if ($minutes instanceof HTMLElement) {
+                $minutes.innerText = formatTime((diff % HOUR) / MINUTE)
+            }
+
+            if ($seconds instanceof HTMLElement) {
+                $seconds.innerText = formatTime((diff % MINUTE) / SECOND)
+            }
+        }
+
+        setInterval(updateCountdown, SECOND)
+
+        updateCountdown()
+    }
+
+    init()
+</script>

@@ -1,0 +1,52 @@
+<div
+    class={
+    `-top-1/2 -left-1/2 -bottom-1/2 -right-1/2
+    fixed w-[200%] h-[200vh] inset-0  z-[99999] pointer-events-none opacity-30
+    `}
+>
+
+</div>
+
+<style>
+    div {
+        background-image: url('/bg-pattern.png');
+        animation: pattern 100s infinite;
+
+    }
+
+    @keyframes pattern {
+        0% {
+            transform: translate(0, 0);
+        }
+        10% {
+            transform: translate(-5%, -5%);
+        }
+        20% {
+            transform: translate(-10%, 5%);
+        }
+        30% {
+            transform: translate(5%, -10%);
+        }
+        40% {
+            transform: translate(-5%, 15%);
+        }
+        50% {
+            transform: translate(-10%, 5%);
+        }
+        60% {
+            transform: translate(15%, 0);
+        }
+        70% {
+            transform: translate(0, 15%);
+        }
+        80% {
+            transform: translate(10, 5%);
+        }
+        90% {
+            transform: translate(5%, 10%);
+        }
+        100% {
+            transform: translate(0, 0);
+        }
+    }
+</style>
