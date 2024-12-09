@@ -1,0 +1,134 @@
+<div id="smoke-bg" class="fixed top-0 h-full w-full -z-10">
+</div>
+
+<script>
+    import * as THREE from 'three'
+
+    const $bg = document.getElementById('smoke-bg')
+
+    let w = window.innerWidth
+    let h = window.innerHeight
+
+
+    const THEME = {
+        dark: {
+            background: 0x666666,
+            light: 0xffffff,
+            opacity: 0.8
+        },
+        light: {
+            background: 0xeeeeee,
+            light: 0xffffff,
+            opacity: 0.3
+        }
+    } as const
+
+    const themePreference = window.getThemePreference()
+    let currentTheme = THEME[themePreference]
+
+
+
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera( 75, w / h, 1, 1000 )
+    camera.position.z = 10
+    scene.add(camera)
+
+    const renderer = new THREE.WebGLRenderer()
+    renderer.setSize(w, h)
+
+    renderer.setClearColor(currentTheme.background, 1)
+
+    $bg?.appendChild(renderer.domElement)
+
+    renderer.render(scene, camera)
+
+
+    //LIGHT
+
+    const light = new THREE.DirectionalLight(currentTheme.light, 0.5)
+    light.position.set(-1, 3, 1)
+    scene.add(light)
+
+    // const helper = new THREE.DirectionalLightHelper(light, 5)
+    // scene.add(helper)
+
+
+    // PARTICLES
+    const smokeParticles: THREE.Mesh[] = []
+
+    const loader = new THREE.TextureLoader()
+    loader.crossOrigin = ""
+
+    loader.load('/bg-pattern.png', (texture) => {
+        // GEOMETRIA
+        // Se crea un plano geometrico (Como hoja de papel)
+        // Sin profundidad
+        const smokeGeo = new THREE.PlaneGeometry(300, 300);
+        // MATERIAL
+        const smokeMaterial = new THREE.MeshLambertMaterial({
+            map: texture,
+            transparent: true,
+            opacity: currentTheme.opacity
+        })
+
+        //MESH
+        const NUM_OF_PARTICLES = 300
+
+        for (let p = 0; p < NUM_OF_PARTICLES; p++) {
+            const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
+            //Posiciones aleatorias
+            particle.position.set(
+                Math.random() * 500 - 250, //X (de -250 a 250)
+                Math.random() * 500 - 250, //Y (de -250 a 250)
+                Math.random() * 1000 - 100 //Z (de -100 a 900)
+            )
+
+            particle.rotation.z = Math.random() * 360
+            scene.add(particle)
+            smokeParticles.push(particle)
+        }
+    })
+
+    //CAMERA RESIZE when window is resized
+    function resize () {
+        w = window.innerWidth
+        h = window.innerHeight
+        camera.aspect = w / h
+        camera.updateProjectionMatrix()
+
+        renderer.setSize(w, h)
+    }
+
+    //ANIMATION of particles
+    function animate() {
+        requestAnimationFrame(animate)
+
+        smokeParticles.forEach((particle) => {
+            particle.rotation.z += 0.0001
+        })
+
+        renderer.render(scene, camera)
+    }
+
+    animate()
+
+    window.addEventListener('resize', resize)
+
+    //when theme toggle is clicked, change the theme
+    //changes light, color and material opacity
+    window.addEventListener("theme-changed", () => {
+        const themePreference = window.getThemePreference()
+        currentTheme = THEME[themePreference]
+        renderer.setClearColor(currentTheme.background, 1)
+        light.color.setHex(currentTheme.light)
+        
+        smokeParticles.forEach((particle) => {
+            if (particle.material instanceof THREE.MeshLambertMaterial) {
+             particle.material.opacity = currentTheme.opacity
+            }
+        })
+    })
+
+    renderer.render(scene, camera)
+
+</script>

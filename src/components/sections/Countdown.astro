@@ -21,7 +21,7 @@ const timeTypes = [
         <span>🎄Days to Christmas!🎄</span>
     </h3>
 
-    <div class="flex flex-row gap-x-1 text-primary uppercase font-semibold" data-date={TIMESTAMP_END}>
+    <div class="flex flex-row gap-x-1 uppercase font-semibold" data-date={TIMESTAMP_END}>
         {
             timeTypes.map((timeType) => (
                 <CountdownPart timeType={timeType.type} />
@@ -31,6 +31,10 @@ const timeTypes = [
 </section>
 
 <style>
+    html.dark section div {
+        color: var(--color-secondary);
+    }
+
     .attorney-badge {
         view-timeline-name: --badgeZoom;
         view-timeline-axis: block;

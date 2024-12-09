@@ -1,6 +1,6 @@
 <svg version="1.1" id="Layer_1" 
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="48" height="48"
-	 viewBox="0 0 64 60" enable-background="new 0 0 64 60" xml:space="preserve" class="scales text-primary">
+	 viewBox="0 0 64 60" enable-background="new 0 0 64 60" xml:space="preserve" class="scales">
 <g id="Page-1">
 	<g id="Law" transform="translate(1.000000, 1.000000)">
 		<path id="Shape_2_" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="
@@ -28,6 +28,10 @@
         animation-timeline: --scalesChange;
         animation-name: dangle;
     }
+
+	html.dark .scales {
+		color: var(--color-secondary);
+	}
 
     @keyframes dangle {
     0%, 100% {

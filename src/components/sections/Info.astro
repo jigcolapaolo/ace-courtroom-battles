@@ -1,8 +1,8 @@
 ---
-import ScalesIcon from "../other/ScalesIcon.astro";
+import ScalesIcon from "@/icons/ScalesIcon.astro";
 ---
 
-<section class="flex font-medium text-primary gap-y-10 my-32 flex-col">
+<section class="flex font-medium gap-y-10 my-32 flex-col">
     <div class="flex justify-center items-center">
         <ScalesIcon  />
     </div>
@@ -25,6 +25,11 @@ import ScalesIcon from "../other/ScalesIcon.astro";
 </section>
 
 <style>
+
+    html.dark section div article {
+        border-color: var(--color-secondary);
+    }
+
     .info-center-text {
         view-timeline-name: --infoChange;
         view-timeline-axis: block;
