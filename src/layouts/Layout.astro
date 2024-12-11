@@ -21,18 +21,6 @@ const { title } = Astro.props;
 			content="Relive the legendary battles between attorneys and prosecutors in the courtroom"
 		/>
 		<title>{title}</title>
-		<script is:inline>
-			window.getThemePreference = () => {
-				const localItem = typeof localStorage !== 'undefined' && localStorage.getItem('theme');
-				if (localItem) return localItem
-				
-				return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-			};
-			const isDark = window.getThemePreference() === 'dark';
-			document.documentElement.classList.toggle('dark', isDark);
-
-			window.getThemePreference = getThemePreference
-		</script>
 	</head>
 	<body>
 		<!-- <Pattern /> -->
@@ -57,6 +45,9 @@ const { title } = Astro.props;
 	:root {
 		--color-primary: #333;
 		--color-secondary: #ddd;
+		--color-badge: #ebba34;
+
+		--background-color: #222;
 	}
 
 	html,
@@ -68,12 +59,15 @@ const { title } = Astro.props;
 	}
 
 	html {
-		background: #ddd;
-		color: #333;
+		background: var(--background-color);
+		color: var(--color-secondary);
+		overflow-x: hidden;
+		overscroll-behavior: none;
 	}
 
-	html.dark {
-		background: #333;
-		color: #ddd;
+	svg {
+		fill: var(--color-secondary);
 	}
+
+
 </style>

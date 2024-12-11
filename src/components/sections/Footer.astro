@@ -1,6 +1,5 @@
 ---
 import InstaIcon from "@/icons/InstaIcon.astro";
-import ThemeToggle from "../other/ThemeToggle.astro";
 import GithubIcon from "@/icons/GithubIcon.astro";
 import TwitterXIcon from "@/icons/TwitterXIcon.astro";
 ---
@@ -28,18 +27,15 @@ import TwitterXIcon from "@/icons/TwitterXIcon.astro";
                 <GithubIcon />
             </a>
         </li>
-        <li class="hover:scale-125 hover:opacity-70 inline-block transition">
-            <ThemeToggle />
-        </li>
     </ul>
 </footer>
 
 <style>
-    html.dark footer {
+    footer {
         border-color: var(--color-secondary);
     }
 
-    html.dark footer span {
+    footer span {
         color: var(--color-secondary);
     }
 </style>

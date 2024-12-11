@@ -31,8 +31,22 @@ const timeTypes = [
 </section>
 
 <style>
-    html.dark section div {
+    section div {
         color: var(--color-secondary);
+    }
+
+    section h3 span {
+        display: inline-block;
+        animation: colorAnimation 10s infinite;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes colorAnimation {
+        0% { color: red; text-shadow: 2px 2px 10px red; }
+        25% { color: green; text-shadow: 2px 2px 10px green; }
+        50% { color: yellow; text-shadow: 2px 2px 10px yellow; }
+        75% { color: blue; text-shadow: 2px 2px 10px blue; }
+        100% { color: red; text-shadow: 2px 2px 10px red; }
     }
 
     .attorney-badge {
