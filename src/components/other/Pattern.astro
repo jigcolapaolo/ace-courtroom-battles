@@ -1,52 +1,59 @@
-<div
-    class={
-    `-top-1/2 -left-1/2 -bottom-1/2 -right-1/2
-    fixed w-[200%] h-[200vh] inset-0  z-[99999] pointer-events-none opacity-30
-    `}
->
-
-</div>
+<div></div>
 
 <style>
     div {
+        position: fixed;
         background-image: url('/bg-pattern.png');
-        animation: pattern 100s infinite;
+        background-repeat: repeat;
+        inset: -50%;
+        height: 200vh;
+        width: 200%;
+        pointer-events: none;
+        z-index: 999999;
+        opacity: 0.2;
+        animation: pattern 150s linear infinite;
 
     }
 
     @keyframes pattern {
         0% {
-            transform: translate(0, 0);
+            transform: translate3d(0);
         }
         10% {
-            transform: translate(-5%, -5%);
+            transform: translate3d(-5%, -5%, 0);
         }
         20% {
-            transform: translate(-10%, 5%);
+            transform: translate3d(-10%, 5%, 0);
         }
         30% {
-            transform: translate(5%, -10%);
+            transform: translate3d(5%, -10%, 0);
         }
         40% {
-            transform: translate(-5%, 15%);
+            transform: translate3d(-5%, 15%, 0);
         }
         50% {
-            transform: translate(-10%, 5%);
+            transform: translate3d(-10%, 5%, 0);
         }
         60% {
-            transform: translate(15%, 0);
+            transform: translate3d(15%, 0, 0);
         }
         70% {
-            transform: translate(0, 15%);
+            transform: translate3d(15%, 15%, 0);
         }
         80% {
-            transform: translate(10, 5%);
+            transform: translate3d(10, 5%, 0);
         }
         90% {
-            transform: translate(5%, 10%);
+            transform: translate3d(5%, 10%, 0);
         }
         100% {
-            transform: translate(0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        div {
+            animation: none;
         }
     }
 </style>

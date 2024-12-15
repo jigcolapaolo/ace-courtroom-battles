@@ -2,7 +2,7 @@
 import HeroLogo from "../other/HeroLogo.astro";
 ---
 
-<section class="flex flex-col items-center justify-center">
-    <span class="uppercase text-secondary bg-primary px-6 py-1 font-medium animate-fade-in animate-delay-300">Welcome to</span>
-    <HeroLogo className="animate-fade-in-up w-[300px] h-auto md:w-[400px]" />
+<section class="relative flex flex-col items-center justify-center">
+    <div class="absolute inset-0 -z-10 m-auto w-[310px] h-[200px] sm:w-[600px] md:w-[700px] rounded-full bg-third blur-2xl "></div>
+    <HeroLogo className="animate-fade-in-up w-[310px] h-auto sm:w-[600px] md:w-[700px] pointer-events-none" />
 </section>

@@ -8,6 +8,12 @@ export default {
 			colors: {
 				'primary': '#333',
 				'secondary': '#ddd',
+				'badge': '#ebba34',
+				'badge-hover': '#EBBA34ff',
+				'third': '#1a1423ff',
+				'fourth': '#3d314aff',
+				'fifth': '#684756ff',
+				'sixth': '#96705bff',
 			}
 		},
 	},
