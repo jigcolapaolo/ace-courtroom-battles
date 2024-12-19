@@ -10,15 +10,15 @@ import ScalesIcon from "@/icons/ScalesIcon.astro";
 
     <div class="flex flex-col md:flex-row uppercase text-center gap-x-10 w-full">
         <article class="order-2 md:w-[20%] md:order-none flex justify-center items-center
-            text-xl py-10 md:py-12 lg:py-20 px-10 border-y-2 border-primary">
+            text-xl py-10 md:py-12 lg:py-20 px-10 border-y-2">
             <h5 class="w-56 text-center">Case files, Court Records and Evidence Highlights</h5>
         </article>
         <article class="order-1 md:w-[60%] md:order-none border-t-2 flex justify-center items-center
-            text-4xl py-10 md:py-12 lg:py-20 px-10 md:border-y-2 border-primary">
+            text-4xl py-10 md:py-12 lg:py-20 px-10 md:border-y-2">
             <h4 class="info-center-text">Witness the Greatest Courtroom Duels</h4>
         </article>
         <article class="order-3 md:order-none md:w-[20%] flex-shrink flex justify-center items-center text-xl
-             py-10 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2 border-primary">
+             py-10 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2">
             <h5>Featuring iconic attorneys and prosecutors</h5>
         </article>
     </div>
@@ -27,7 +27,15 @@ import ScalesIcon from "@/icons/ScalesIcon.astro";
 <style>
 
     section div article {
-        border-color: var(--color-secondary);
+
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        background:
+            linear-gradient(to right, transparent, var(--color-secondary), transparent) top,
+            linear-gradient(to right, transparent, var(--color-secondary), transparent) bottom
+        ;
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
     }
 
     .info-center-text {

@@ -1,0 +1,85 @@
+---
+import type { Character } from '@/env';
+
+
+interface Props {
+    characterList: Character[]
+}
+
+const { characterList } = Astro.props;
+---
+<aside class="aside-characters mt-16 grid grid-cols-2 gap-4 gap-y-12">
+    {
+        characterList.map(({ id, name, img, type }) => (
+        <a 
+            class="character-link"
+            title={`Visit ${name} page`}
+            href={`/characters/${id}`}
+            data-id={id}
+            data-name={name}
+            data-type={type}
+        >
+            <img 
+                src={img} 
+                alt={`Picture of ${name}`} 
+                loading="lazy" 
+                class="character-img w-28 mb-[5rem] h-auto transition group-hover:scale-110" 
+            />
+        </a>
+        ))
+    }
+</aside>
+
+<style>
+    .aside-characters {
+        grid-auto-rows: 80px;
+        align-items: start;
+    }
+
+    .aside-characters > .character-link:nth-child(2n) {
+        align-self: end;
+        transform: translate(0, 50%);
+    }
+
+    .character-link {
+        @apply relative flex h-12 w-32 items-center justify-center;
+        background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1) 0%,
+            transparent 40%,
+            transparent 100%
+        );
+        transition: all 0.5s ease;
+    }
+
+    .character-link::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        display: block;
+        background: linear-gradient(to bottom, var(--color-fifth) 0%, transparent);
+        opacity: 0;
+        height: 50%;
+        transition:
+            opacity 0.2s ease-in-out,
+            height 0.2s ease-in-out;
+    }
+
+    .character-link:hover::before {
+        opacity: 0.8;
+        height: 100%;
+    }
+
+    .character-img {
+        transition: transform 0.3s ease-in-out;
+        mask-image: linear-gradient(
+		  black 80%,
+		  transparent
+		)
+    }
+
+    .character-link:hover .character-img {
+        transform: scale(1.1);
+    }
+</style>
+

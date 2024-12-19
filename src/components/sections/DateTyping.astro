@@ -1,38 +1,73 @@
 <section class="mx-auto flex flex-col justify-center items-center text-center">
     <div class="mt-8">
-        <div class="bg-third opacity-70 animate-fade-in animate-delay-300 rounded-md 
+        <div class="date-typing bg-third rounded-md 
             border-2 border-sixth h-32 grid place-items-center pointer-events-none">
-            <script is:inline>
-                const now = new Date();
-
-                const day = now.getDate();
-                const month = now.toLocaleString('en-US', { month: 'long' });
-
-                const time = now.toLocaleTimeString('en-US', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-
-                const selfScript = document.currentScript;
-                selfScript.parentNode.innerHTML = `
-                    <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=2000&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
-                `;
-            </script>
         </div>
     </div>
 
     <a 
+        id="enter-courtroom"
         class={`
             border-sixth border-2 bg-third font-medium uppercase text-lg
             px-4 py-1 mt-8
             hover:bg-badge-hover hover:scale-125 hover:text-third transition inline-block
         `}
-        href="#"
-        target="_blank"
+        href="/characters"
         rel="noopener noreferrer"
     >
         Enter Courtroom
     </a>
 
-    <audio src="/ace-typing.mp3" autoplay ></audio>
+    <audio id="typing-sound" src="/ace-typing.mp3" ></audio>
+    <audio id="hammer-sound" src="/hammer-sound.mp3" ></audio>
 </section>
+
+
+<script>
+    import { navigate } from "astro:transitions/client";
+
+    document.addEventListener("astro:page-load", () => {
+        const enterCourtroom = document.getElementById("enter-courtroom") as HTMLAnchorElement;
+    
+        enterCourtroom.addEventListener("click", (e) => {
+            e.preventDefault();
+            const hammerSound = document.getElementById("hammer-sound") as HTMLAudioElement;
+            enterCourtroom.classList.add("animate-shake");
+            hammerSound.play();
+            
+            hammerSound.onended = () => {
+                navigate("/characters");
+            }
+        })
+    })
+
+    document.addEventListener("astro:page-load", () => {
+    const typingSound = document.getElementById("typing-sound") as HTMLAudioElement;
+    const dateTyping = document.querySelector('.date-typing') as HTMLDivElement;
+
+    const hasVisited = localStorage.getItem('hasVisited');
+    
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.toLocaleString('en-US', { month: 'long' });
+    const time = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+
+    if (!hasVisited) {
+        typingSound.play();
+
+        dateTyping.innerHTML = `
+            <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=2000&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
+        `;
+        localStorage.setItem('hasVisited', 'true');
+    } else {
+        dateTyping.innerHTML = `
+            <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=1&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
+        `;
+    }
+});
+
+
+</script>

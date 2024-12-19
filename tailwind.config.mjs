@@ -14,7 +14,7 @@ export default {
 				'fourth': '#3d314aff',
 				'fifth': '#684756ff',
 				'sixth': '#96705bff',
-			}
+			},
 		},
 	},
 	plugins: [animations],

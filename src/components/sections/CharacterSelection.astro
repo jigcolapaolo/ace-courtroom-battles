@@ -1,131 +1,73 @@
 ---
-import { CHARACTERS } from "@lib/consts";
+import { CHARACTER_TYPES, CHARACTERS } from "@lib/consts";
+import CharacterSelectionList from "./CharacterSelectionList.astro";
+
+const attorneyCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_TYPES.ATTORNEY);
+const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_TYPES.PROSECUTOR);
 ---
 
 <section class="my-40">
-    <h3 class="text-5xl text-center font-medium">
+    <h3 class="text-5xl text-center font-medium text-badge">
         Meet the Attorneys and Prosecutors
     </h3>
-    <div class="mt-40 flex flex-col items-center justify-center gap-8">
-        <article class="flex w-full flex-col items-center justify-center relative">
-            <header class="relative flex w-full flex-col items-center justify-center">
+    <p class="mt-10 text-lg text-center">Discover the details of the courtroom rivals</p>
+    <div class="mt-28 flex flex-col items-center justify-center gap-8">
+        <article class="flex w-full items-center justify-center relative">
+            <CharacterSelectionList characterList={attorneyCharacters} />
+            <header class="relative flex w-[40%] flex-col items-center justify-center">
                 <img 
+                    transition:name="character-img-lg"
                     class="character-img-lg w-[300px] h-[400px]" 
                     alt="Image of Character" 
-                    src="/characters/franziska-lg-select.webp" 
-                    style="filter: drop-shadow(0 0 10px var(--color-fourth));"
+                    src="/characters/phoenix-lg-select.webp" 
+                    style="filter: drop-shadow(0 0 20px var(--color-fourth));"
                 />
-                <h2 class="character-title absolute bottom-28 text-5xl -rotate-6 text-badge">
-                    Franziska Von Karma
-                </h2>
-                <img 
-                    class="character-badge w-24 h-auto absolute bottom-0" 
-                    alt="Image of badge" 
-                    src="/badges/prosecutor-badge.webp" 
-                />
+                <div class="absolute flex flex-col items-center justify-end h-full">
+                    <img 
+                        class="character-badge w-20 h-auto "
+                        alt="Image of badge" 
+                        src="/badges/attorney-badge.webp" 
+                    />
+                    <h2 
+                    style="filter: drop-shadow(0 0 2px black);"
+                    class="character-title  text-5xl text-wrap text-badge text-center">
+                        Phoenix Wright
+                    </h2>
+                </div>
             </header>
-            <footer class="flex w-full justify-between absolute bottom-0 text-secondary text-center">
-                <div class="flex flex-col gap-y-2">
-                    <h4 class="text-lg">Country</h4>
-                    <p class="text-lg font-bold">United States</p>
-                    <a href="#" class="mt-10 font-semibold text-badge hover:scale-110 inline-block transition">Learn more</a>
-                </div>
-                <div class="flex flex-col gap-y-2">
-                    <h4 class="text-lg">Age</h4>
-                    <p class="text-lg font-bold">31</p>
-                    <a href="#" class="mt-10 font-semibold text-badge hover:scale-110 inline-block transition">See profile</a>
-                </div>
-            </footer>
+            <CharacterSelectionList characterList={prosecutorCharacters} />
         </article>
-        <aside class="mt-16 grid grid-cols-2 gap-6 gap-y-12 md:grid-cols-6">
-            {
-                CHARACTERS.map(({ id, name, img, type }) => (
-                    <a 
-                        class="character-link group relative flex h-12 items-center justify-center"
-                        title={`Visit ${name} page`}
-                        href={`/character/${id}`}
-                        target="_blank"
-                        data-id={id}
-                        data-name={name}
-                        data-type={type}
-                    >
-                        <img 
-                            src={img} 
-                            alt={`Picture of ${name}`} 
-                            loading="lazy" 
-                            class="character-img w-28 mb-[5rem] h-auto transition group-hover:scale-110" 
-                        />
-                    </a>
-
-                ))
-            }
-        </aside>
     </div>
 
 </section>
 
 <script>
-    const charLinks = document.querySelectorAll('.character-link');
-    const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
-    const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
-    const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
+    document.addEventListener("astro:page-load", () => {
+            
+        const charLinks = document.querySelectorAll('.character-link');
+        const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
+        const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
+        const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
+        const charProfession = document.querySelector('.character-profession') as HTMLParagraphElement;
     
-
-    charLinks.forEach(link => {
-        link.addEventListener('mouseenter', (event) => {
-            const { name, type } = (event.currentTarget as HTMLElement).dataset 
-            const charFirstName = name?.split(' ')[0].toLowerCase();
-            const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
-            const characterBadgeSrc = `/badges/${type}-badge.webp`;
-
-            charImgLg.src = characterImgSrc;
-            charBadge.src = characterBadgeSrc;
-            charTitle.textContent = name as string;
-
-            charImgLg.alt = `Picture of ${name}`;
-            charBadge.alt = `${type} badge`;
+        charLinks.forEach(link => {
+            link.addEventListener('mouseenter', (event) => {
+                event.preventDefault();
+                const { name, type } = (event.currentTarget as HTMLElement).dataset as { name: string; type: string; };
+                const charFirstName = name?.split(' ')[0].toLowerCase();
+                const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
+                const characterBadgeSrc = `/badges/${type}-badge.webp`;
+    
+                charImgLg.src = characterImgSrc;
+                charBadge.src = characterBadgeSrc;
+                charTitle.textContent = name as string;
+                charProfession.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+    
+                charImgLg.alt = `Picture of ${name}`;
+                charBadge.alt = `${type} badge`;
+            })
         })
+        
     })
+
 </script>
-
-<style>
-    .character-link {
-        background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.1) 0%,
-            transparent 40%,
-            transparent 100%
-        );
-        transition: all 0.5s ease;
-    }
-
-    .character-link::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        display: block;
-        background: linear-gradient(to bottom, var(--color-fifth) 0%, transparent);
-        opacity: 0;
-        height: 50%;
-        transition:
-            opacity 0.2s ease-in-out,
-            height 0.2s ease-in-out;
-    }
-
-    .character-link:hover::before {
-        opacity: 0.8;
-        height: 100%;
-    }
-
-    .character-img {
-        transition: transform 0.3s ease-in-out;
-        mask-image: linear-gradient(
-		  black 80%,
-		  transparent
-		)
-    }
-
-    .character-link:hover .character-img {
-        transform: scale(1.1);
-    }
-</style>

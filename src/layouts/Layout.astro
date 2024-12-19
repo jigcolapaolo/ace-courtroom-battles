@@ -1,7 +1,9 @@
 ---
 import Pattern from '@/components/other/Pattern.astro';
+import Footer from '@/components/sections/Footer.astro';
 // import SmokeBg from '@/components/other/SmokeBg.astro';
 import '@fontsource-variable/jost'
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title: string;
@@ -21,12 +23,14 @@ const { title } = Astro.props;
 			content="Relive the legendary battles between attorneys and prosecutors in the courtroom"
 		/>
 		<title>{title}</title>
+		<ClientRouter />
 	</head>
 	<body>
 		<Pattern />
 		 <!-- <SmokeBg /> -->
 		<div class="max-w-6xl px-2 lg:px-10 pt-10 mx-auto">
 			<slot />
+			<Footer />
 		</div>
 	</body>
 </html>
@@ -75,5 +79,25 @@ const { title } = Astro.props;
 		fill: var(--color-secondary);
 	}
 
+
+
+	::-webkit-scrollbar {
+		width: 6px;
+		border-radius: 6px;
+	}
+
+	::-webkit-scrollbar-track {
+		background-color: var(--color-primary);
+		border-radius: 6px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: var(--color-badge);
+		border-radius: 6px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background-color: var(--color-badge-hover);
+	}
 
 </style>

@@ -1,0 +1,57 @@
+---
+import { NAVBAR_LINKS } from "@/lib/consts";
+import NavbarLogo from "../other/NavbarLogo.astro";
+import ScalesIcon from "@/icons/ScalesIcon.astro";
+
+const currentUrl = Astro.url.pathname
+
+const isActive = (url: string) => {
+    return url === currentUrl
+}
+
+---
+
+<section>
+    <nav>
+        <div><NavbarLogo /></div>
+        <ul class="flex justify-around items-center w-full">
+            {
+                NAVBAR_LINKS.map((link) => (
+                    <li class="flex gap-x-2">
+                        <a href={link.url} class={isActive(link.url) ? "active" : ""}>{link.name}</a>
+                        {isActive(link.url) ? <ScalesIcon wSize="24" hSize="24" hasAnimation={false} /> : ""}
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</section>
+
+
+<style>
+    nav {
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        background:
+            linear-gradient(to right, transparent, var(--color-secondary), transparent) bottom
+        ;
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+
+        padding-bottom: 1rem;
+    }
+
+    a {
+        display: inline-block;
+        color: var(--color-secondary);
+        transition: color 0.4s ease;
+
+        &:hover {
+            color: var(--color-badge);
+        }
+    }
+
+    .active {
+        color: var(--color-badge);
+    }
+</style>

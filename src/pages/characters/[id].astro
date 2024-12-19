@@ -1,0 +1,52 @@
+---
+import { CHARACTERS } from "@/lib/consts"
+import Layout from "@/layouts/Layout.astro"
+import type { Character } from "@/env"
+
+export function getStaticPaths() {
+    return CHARACTERS.map(({ id }) => ({
+        params: { id },
+    }))
+}
+
+const { id } = Astro.params
+const character = CHARACTERS.find(({ id: charId }) => charId === Number(id))
+const { 
+    name,
+    img, 
+    type, 
+    quotes, 
+    alias, 
+    birthYear, 
+    eyeColor, 
+    hairColor, 
+    height, 
+    debutEpisode, 
+    objectionSound, 
+    musicalTheme, 
+    musicalThemeLink 
+} = character as Character
+const firstName = name.split(' ')[0].toLowerCase()
+---
+
+<Layout title=`${name} - Details`>
+    <main>
+        <h1>
+            Details of {name}
+        </h1>
+        <img 
+            transition:name="character-img-lg"
+            class="character-img-lg w-[300px] h-[400px]" 
+            alt=`Image of ${name}` 
+            src=`/characters/${firstName}-lg-select.webp` 
+            style="filter: drop-shadow(0 0 20px var(--color-fourth));"
+        />
+        {
+            quotes.map(quote => (
+                <p class="text-lg">
+                    {quote}
+                </p>
+            ))
+        }
+    </main>
+</Layout>
