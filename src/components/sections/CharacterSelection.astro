@@ -24,13 +24,16 @@ const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_
                 />
                 <div class="absolute flex flex-col items-center justify-end h-full">
                     <img 
+                        transition:name="character-badge"
                         class="character-badge w-20 h-auto "
                         alt="Image of badge" 
                         src="/badges/attorney-badge.webp" 
                     />
                     <h2 
-                    style="filter: drop-shadow(0 0 2px black);"
-                    class="character-title  text-5xl text-wrap text-badge text-center">
+                        transition:name="character-title"
+                        style="filter: drop-shadow(0 0 2px black);"
+                        class="character-title  text-5xl text-wrap text-badge text-center"
+                    >
                         Phoenix Wright
                     </h2>
                 </div>

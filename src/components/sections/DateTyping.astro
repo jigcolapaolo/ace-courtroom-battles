@@ -1,7 +1,7 @@
 <section class="mx-auto flex flex-col justify-center items-center text-center">
     <div class="mt-8">
         <div class="date-typing bg-third rounded-md 
-            border-2 border-sixth h-32 grid place-items-center pointer-events-none">
+            border-2 border-sixth h-auto p-2 w-34 grid place-items-center pointer-events-none">
         </div>
     </div>
 
@@ -21,7 +21,6 @@
     <audio id="typing-sound" src="/ace-typing.mp3" ></audio>
     <audio id="hammer-sound" src="/hammer-sound.mp3" ></audio>
 </section>
-
 
 <script>
     import { navigate } from "astro:transitions/client";
@@ -64,7 +63,9 @@
         localStorage.setItem('hasVisited', 'true');
     } else {
         dateTyping.innerHTML = `
-            <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=1&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
+            <p class="typed-text text-md md:text-2xl text-[#06DF0B]">
+                ${month} ${day} - ${time}<br>Step into the courtroom drama<br>and relive the legendary battles<br>between attorneys and prosecutors!
+            </p>
         `;
     }
 });

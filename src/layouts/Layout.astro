@@ -28,7 +28,7 @@ const { title } = Astro.props;
 	<body>
 		<Pattern />
 		 <!-- <SmokeBg /> -->
-		<div class="max-w-6xl px-2 lg:px-10 pt-10 mx-auto">
+		<div class="max-w-6xl px-2 lg:px-10 mx-auto">
 			<slot />
 			<Footer />
 		</div>
@@ -45,6 +45,7 @@ const { title } = Astro.props;
 </script>
 
 <style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 
 	:root {
 		--color-primary: #333;
@@ -79,7 +80,10 @@ const { title } = Astro.props;
 		fill: var(--color-secondary);
 	}
 
-
+    .typed-text {
+        font-family: 'DotGothic16', sans-serif;
+        font-weight: 400;
+    }
 
 	::-webkit-scrollbar {
 		width: 6px;
