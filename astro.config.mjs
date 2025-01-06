@@ -7,11 +7,9 @@ import auth from 'auth-astro';
 
 import netlify from '@astrojs/netlify';
 
-import db from '@astrojs/db';
-
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), auth(), db()],
+  integrations: [tailwind(), auth()],
   output: 'server',
   devToolbar: {
     enabled: false
