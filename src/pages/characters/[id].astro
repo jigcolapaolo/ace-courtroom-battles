@@ -7,6 +7,7 @@ import Navbar from "@/components/sections/Navbar.astro"
 import { getSession } from 'auth-astro/server'
 import { generateUserId } from "@/lib/users"
 import { prisma } from "prisma/client"
+import CharacterQuotes from "@/components/sections/CharacterQuotes.astro"
 
 const session = await getSession(Astro.request)
 
@@ -127,16 +128,7 @@ const firstName = name.split(' ')[0].toLowerCase()
                 {name}
             </h1>
         </section>
-        <section>
-            QUOTES
-            {
-                quotes.map(quote => (
-                    <p class="text-lg">
-                        {quote}
-                    </p>
-                ))
-            }
-        </section>
+        <CharacterQuotes quotes={quotes} />
         <section>
             {
                 session ? (

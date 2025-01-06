@@ -1,0 +1,48 @@
+---
+import LeftArrowIcon from "@/icons/LeftArrowIcon.astro"
+import RightArrowIcon from "@/icons/RightArrowIcon.astro"
+
+interface Props {
+    quotes: string[]
+}
+
+const { quotes } = Astro.props
+---
+
+<section class="flex justify-center items-center w-full">
+    <button id="prev-quote-btn" aria-label="Previous quote" class="hover:scale-105">
+        <LeftArrowIcon />
+    </button>
+    <div class="bg-third rounded-md w-[60%]
+        border-2 border-sixth h-auto p-2 py-3 w-34 grid place-items-center pointer-events-none">
+        <p id="quotes-container" class="typed-text text-md md:text-2xl"></p>
+    </div>
+    <button id="next-quote-btn" aria-label="Next quote" class="hover:scale-105">
+        <RightArrowIcon />
+    </button>
+</section>
+
+<script define:vars={{ quotes }}>
+    document.addEventListener("astro:page-load", () => {
+        const prevQuoteBtn = document.getElementById("prev-quote-btn");
+        const nextQuoteBtn = document.getElementById("next-quote-btn");
+        const quotesContainer = document.getElementById("quotes-container");
+
+        let quotesIndex = 0
+
+        quotesContainer.textContent = quotes[quotesIndex]
+
+        prevQuoteBtn.addEventListener("click", () => {
+            quotesIndex = quotesIndex === 0 ? quotes.length - 1 : quotesIndex - 1
+
+            quotesContainer.textContent = quotes[quotesIndex]
+        })
+
+        nextQuoteBtn.addEventListener("click", () => {
+            quotesIndex = quotesIndex === quotes.length - 1 ? 0 : quotesIndex + 1
+
+            quotesContainer.textContent = quotes[quotesIndex]
+        })
+
+    })
+</script>
