@@ -1,0 +1,45 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+---
+
+<Layout title="404">
+    <section class="flex flex-col justify-center items-center py-6 sm:flex-row gap-y-6 sm:gap-y-0">
+        <div class="w-[50%] max-h-full flex flex-col justify-center gap-y-16">
+            <h1 class="text-5xl text-center font-medium text-badge">404 Page not found</h1>
+            <a href="/" class="text-xl text-center font-medium hover:text-badge block hover:scale-110 transition">Go back home</a>
+        </div>
+        <div class="w-[100%] sm:w-[50%] flex flex-col justify-center items-center">
+            <picture class="w-[60%]">
+                <img src="/characters/gumshoe-sm-404.webp" alt="Detective Gumshoe" class="gumshoe-img w-auto h-[40%]" />
+            </picture>
+            <div class="mt-8">
+                <div class="bg-third rounded-md 
+                    border-2 border-sixth h-auto p-2 py-3 w-34 grid place-items-center pointer-events-none">
+                    <p class="typed-text text-md md:text-2xl text-[#06DF0B]">Nothing to see here pal!</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <audio id="damage-sound-404" src="/damage-sound.mp3" />
+</Layout>
+
+<style>
+    .gumshoe-img {
+        transition: transform 0.3s ease-in-out;
+        mask-image: linear-gradient(
+		  black 20%,
+		  transparent
+		);
+        filter: drop-shadow(0 0 5px var(--color-fourth));
+    }
+</style>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const damageSound = document.getElementById("damage-sound-404") as HTMLAudioElement;
+        damageSound.play();
+    })
+</script>

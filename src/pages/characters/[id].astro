@@ -28,6 +28,9 @@ rankings.forEach((rank) => {
 
 const { id } = Astro.params
 const character = CHARACTERS.find(({ id: charId }) => charId === Number(id))
+if (!character) {
+    return Astro.redirect("/404")
+}
 const { 
     name,
     type, 
