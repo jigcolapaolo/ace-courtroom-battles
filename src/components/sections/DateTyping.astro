@@ -28,6 +28,8 @@
     document.addEventListener("astro:page-load", () => {
         const enterCourtroom = document.getElementById("enter-courtroom") as HTMLAnchorElement;
     
+        if (!enterCourtroom) return
+
         enterCourtroom.addEventListener("click", (e) => {
             e.preventDefault();
             const hammerSound = document.getElementById("hammer-sound") as HTMLAudioElement;
@@ -41,17 +43,19 @@
     })
 
     document.addEventListener("astro:page-load", () => {
-    const typingSound = document.getElementById("typing-sound") as HTMLAudioElement;
-    const dateTyping = document.querySelector('.date-typing') as HTMLDivElement;
+        const typingSound = document.getElementById("typing-sound") as HTMLAudioElement;
+        const dateTyping = document.querySelector('.date-typing') as HTMLDivElement;
 
-    const hasVisited = localStorage.getItem('hasVisited');
-    
-    const now = new Date();
-    const day = now.getDate();
-    const month = now.toLocaleString('en-US', { month: 'long' });
-    const time = now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+        if (!dateTyping) return
+
+        const hasVisited = localStorage.getItem('hasVisited');
+        
+        const now = new Date();
+        const day = now.getDate();
+        const month = now.toLocaleString('en-US', { month: 'long' });
+        const time = now.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
     });
 
     if (!hasVisited) {

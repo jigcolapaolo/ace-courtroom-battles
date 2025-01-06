@@ -1,9 +1,9 @@
 ---
-import { CHARACTER_TYPES, CHARACTERS } from "@lib/consts";
+import { CHARACTERS } from "@lib/consts";
 import CharacterSelectionList from "./CharacterSelectionList.astro";
 
-const attorneyCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_TYPES.ATTORNEY);
-const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_TYPES.PROSECUTOR);
+const firstSevenCharacters = CHARACTERS.slice(0, 7);
+const lastSevenCharacters = CHARACTERS.slice(7);
 ---
 
 <section class="my-40">
@@ -13,7 +13,7 @@ const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_
     <p class="mt-10 text-lg text-center">Discover the details of the courtroom rivals</p>
     <div class="mt-28 flex flex-col items-center justify-center gap-8">
         <article class="flex w-full items-center justify-center relative">
-            <CharacterSelectionList characterList={attorneyCharacters} />
+            <CharacterSelectionList characterList={firstSevenCharacters} />
             <header class="relative flex w-[40%] flex-col items-center justify-center">
                 <img 
                     transition:name="character-img-lg"
@@ -38,7 +38,7 @@ const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_
                     </h2>
                 </div>
             </header>
-            <CharacterSelectionList characterList={prosecutorCharacters} />
+            <CharacterSelectionList characterList={lastSevenCharacters} />
         </article>
     </div>
 
@@ -51,7 +51,9 @@ const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_
         const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
         const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
         const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
-        const charProfession = document.querySelector('.character-profession') as HTMLParagraphElement;
+
+
+        if (!charLinks || !charTitle || !charImgLg || !charBadge) return
     
         charLinks.forEach(link => {
             link.addEventListener('mouseenter', (event) => {
@@ -64,7 +66,6 @@ const prosecutorCharacters = CHARACTERS.filter(({ type }) => type === CHARACTER_
                 charImgLg.src = characterImgSrc;
                 charBadge.src = characterBadgeSrc;
                 charTitle.textContent = name as string;
-                charProfession.textContent = type.charAt(0).toUpperCase() + type.slice(1);
     
                 charImgLg.alt = `Picture of ${name}`;
                 charBadge.alt = `${type} badge`;
