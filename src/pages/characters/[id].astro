@@ -1,14 +1,30 @@
 ---
-import { CHARACTERS } from "@/lib/consts"
+import { CHARACTERS, RANK_TYPES } from "@/lib/consts"
 import Layout from "@/layouts/Layout.astro"
 import type { Character } from "@/env"
 import Navbar from "@/components/sections/Navbar.astro"
 
-export function getStaticPaths() {
-    return CHARACTERS.map(({ id }) => ({
-        params: { id },
-    }))
-}
+import { getSession } from 'auth-astro/server'
+import { generateUserId } from "@/lib/users"
+import { prisma } from "prisma/client"
+
+const session = await getSession(Astro.request)
+
+const userId = session ? generateUserId(session.user) : null
+const rankings = userId == null ?
+    [] : 
+    await prisma.rankings.findMany({
+        where: { userId },
+        select: {
+            characterId: true,
+            rankId: true,
+        },
+    });
+const userRankings: Record<string, string> = {}
+rankings.forEach((rank) => {
+    userRankings[rank.characterId] = rank.rankId
+})
+
 
 const { id } = Astro.params
 const character = CHARACTERS.find(({ id: charId }) => charId === Number(id))
@@ -108,22 +124,177 @@ const firstName = name.split(' ')[0].toLowerCase()
                 {name}
             </h1>
         </section>
-        {
-            quotes.map(quote => (
-                <p class="text-lg">
-                    {quote}
-                </p>
-            ))
-        }
+        <section>
+            QUOTES
+            {
+                quotes.map(quote => (
+                    <p class="text-lg">
+                        {quote}
+                    </p>
+                ))
+            }
+        </section>
+        <section>
+            {
+                session ? (
+                    <div class="flex items-center justify-center gap-4">
+                        <img class="size-12 rounded-full" src={session.user?.image} alt={`Image of ${session.user?.name}`} />
+                        <div class="flex justify-center flex-col">
+                            <h4 class="text-xl font-bold">{session.user?.name}</h4>
+                            <button id="logout" aria-label="Logout" class="font-light text-sm text-badge">Logout</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button 
+                            class:list={[
+                                "text-badge rank-character",
+                                {
+                                    "is-liked": userRankings[id as string] === RANK_TYPES.LIKE,
+                                }
+                            ]}
+                            data-character-id={id}
+                            data-character-first-name={firstName}
+                            data-rank-id={RANK_TYPES.LIKE}
+                        >{RANK_TYPES.LIKE}</button>
+                        <button 
+                            class:list={[
+                                "text-badge rank-character",
+                                {
+                                    "is-disliked": userRankings[id as string] === RANK_TYPES.DISLIKE
+                                }
+                            ]}
+                            data-character-id={id}
+                            data-character-first-name={firstName}
+                            data-rank-id={RANK_TYPES.DISLIKE}
+                        >{RANK_TYPES.DISLIKE}</button>
+                    </div>
+                ) : (
+                    <div class="flex flex-col">
+                        <button 
+                            id="login" 
+                            aria-label="Login" 
+                            class="font-light text-sm text-badge"
+                        >Login</button>
+                        <small>To like or dislike, you must have a Google account</small>
+                    </div>
+                )
+            }
+        </section>
     </main>
     <audio id="objection-sound" src={objectionSound}></audio>
+    <audio id="snap-sound" src="/snap-sound.mp3"></audio>
+    <audio id="damage-sound" src="/damage-sound.mp3"></audio>
 </Layout>
+
+
+<script>
+    import { RANK_TYPES } from "@/lib/consts";
+
+    document.addEventListener("astro:page-load", () => {
+        const rankButtons = document.querySelectorAll(".rank-character") as NodeListOf<HTMLButtonElement>;
+        const snapSound = document.getElementById("snap-sound") as HTMLAudioElement;
+        const damageSound = document.getElementById("damage-sound") as HTMLAudioElement;
+    
+        rankButtons.forEach(button => {
+
+            button.onclick = () => {
+
+                const buttonParent = button.parentElement as HTMLElement;
+                let previousRank: HTMLElement;
+                let previousRankIsLiked: boolean
+
+                if (buttonParent && buttonParent.querySelector(".is-liked, .is-disliked")) {
+                    previousRank = buttonParent.querySelector(".is-liked, .is-disliked") as HTMLElement;
+                    previousRankIsLiked = previousRank ? previousRank.classList.contains("is-liked") : false
+                    if (previousRankIsLiked) 
+                        previousRank.classList.remove("is-liked")
+                    else 
+                        previousRank.classList.remove("is-disliked")
+
+                }
+
+                if (button.textContent === RANK_TYPES.LIKE) {
+                    button.classList.add("is-liked")
+                } else if (button.textContent === RANK_TYPES.DISLIKE) {
+                    button.classList.add("is-disliked")
+                }
+
+
+                
+                const rollBackUI = () => {
+                    if (button.classList.contains("is-liked"))
+                        button.classList.remove("is-liked") 
+                    else if (button.classList.contains("is-disliked")) 
+                        button.classList.remove("is-disliked")
+                    
+                    
+                    if (previousRank && previousRankIsLiked)
+                        previousRank.classList.add("is-liked")
+                    else 
+                        previousRank.classList.add("is-disliked")
+                    
+                    window.toast({
+                        title: `❌ Error ranking`,
+                        location: "bottom-center",
+                        dismissable: true,
+                        type: "error",
+                    })
+                    damageSound.play();
+                    
+                }
+
+                const { characterId, rankId, characterFirstName } = button.dataset;
+
+                fetch(`/api/rank/${characterId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ rankId, characterFirstName })
+                })
+                .then(res => {
+                    if (!res.ok) return rollBackUI();
+                    window.toast({
+                        title: `✅ Ranked successfully`,
+                        location: "bottom-center",
+                        dismissable: true,
+                        type: "success",
+                    })
+                    snapSound.play();
+                })
+                .catch(() => rollBackUI())
+            }
+        })
+    })
+
+</script>
+
+<script>
+    const { signIn, signOut } = await import('auth-astro/client')
+    
+    document.addEventListener("astro:page-load", async () => {
+
+        const loginButton = document.querySelector("#login") as HTMLButtonElement
+        const logoutButton = document.querySelector("#logout") as HTMLButtonElement
+    
+        if (loginButton) loginButton.onclick = () => {
+            signIn("github")
+            loginButton.ariaDisabled = "true"
+            loginButton.disabled = true
+            loginButton.textContent = "Logging in..."
+        }
+        if (logoutButton) logoutButton.onclick = () => signOut()
+    })
+
+</script>
 
 <script>
     document.addEventListener("astro:page-load", () => {
         const objection = document.querySelector('.objection-img') as HTMLImageElement;
         const objectionSound = document.getElementById("objection-sound") as HTMLAudioElement;
-    
+        
+        if (!objection) return
+
         objection.addEventListener('click', () => {
             objectionSound.play();
             objection.classList.remove("hover:animate-bouncing");
@@ -170,6 +341,14 @@ const firstName = name.split(' ')[0].toLowerCase()
 
     .data-title {
         color: var(--color-badge);
+    }
+
+    .is-liked {
+        color: green;
+    }
+
+    .is-disliked {
+        color: red;
     }
 
 

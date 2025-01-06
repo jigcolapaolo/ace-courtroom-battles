@@ -1,3 +1,9 @@
+declare global {
+    interface Window {
+        toast: function;
+    }
+}
+
 export interface Character {
     id: number;
     name: string;

@@ -15,6 +15,11 @@ export const NAVBAR_LINKS = [
     }
 ]
 
+export const RANK_TYPES = {
+    LIKE: "LIKE",
+    DISLIKE: "DISLIKE"
+}
+
 export const CHARACTER_TYPES = {
     ATTORNEY: "attorney",
     PROSECUTOR: "prosecutor"

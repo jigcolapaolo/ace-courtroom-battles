@@ -1,5 +1,6 @@
 ---
 import Pattern from '@/components/other/Pattern.astro';
+import Toast from '@/components/other/Toast.astro';
 import Footer from '@/components/sections/Footer.astro';
 // import SmokeBg from '@/components/other/SmokeBg.astro';
 import '@fontsource-variable/jost'
@@ -31,6 +32,7 @@ const { title } = Astro.props;
 		<div class="max-w-6xl px-2 lg:px-10 mx-auto">
 			<slot />
 			<Footer />
+			<Toast />
 		</div>
 	</body>
 </html>
