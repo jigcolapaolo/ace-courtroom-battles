@@ -3,7 +3,6 @@ import type { APIRoute } from "astro";
 import { object, safeParse, string } from "valibot"
 import { getSession } from "auth-astro/server";
 import { prisma } from "prisma/client";
-import { generateUserId } from "@/lib/users";
 
 const RankSchema = object({
     rankId: string(),
@@ -18,7 +17,7 @@ const res = (
 
 export const POST: APIRoute = async ({ params, request }) => {
     const session = await getSession(request)
-    if (!session || session?.user?.email == null) {
+    if (!session || session?.user?.id == null) {
         return res("Unauthorized", { status: 401 })
     }
 
@@ -35,7 +34,7 @@ export const POST: APIRoute = async ({ params, request }) => {
     const { rankId, characterFirstName } = output
 
 
-    const userId = generateUserId(session.user)
+    const userId = session.user.id
     const createdAt = new Date()
 
     const newId = `${userId}-${characterId}`

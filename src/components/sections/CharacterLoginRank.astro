@@ -2,7 +2,6 @@
 import DislikeIcon from "@/icons/DislikeIcon.astro";
 import LikeIcon from "@/icons/LikeIcon.astro";
 import { RANK_TYPES } from "@/lib/consts";
-import { generateUserId } from "@/lib/users";
 import { getSession } from "auth-astro/server";
 import { prisma } from "prisma/client";
 
@@ -13,7 +12,7 @@ interface Props {
 
 const session = await getSession(Astro.request)
 
-const userId = session ? generateUserId(session.user) : null
+const userId = session?.user?.id
 const rankings = userId == null ?
     [] : 
     await prisma.rankings.findMany({
@@ -195,7 +194,7 @@ const { id, firstName } = Astro.props
         const logoutButton = document.querySelector("#logout") as HTMLButtonElement
     
         if (loginButton) loginButton.onclick = () => {
-            signIn("github")
+            signIn("google")
             loginButton.ariaDisabled = "true"
             loginButton.disabled = true
             loginButton.textContent = "Logging in..."
