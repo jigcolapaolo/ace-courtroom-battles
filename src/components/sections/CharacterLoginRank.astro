@@ -1,0 +1,213 @@
+---
+import DislikeIcon from "@/icons/DislikeIcon.astro";
+import LikeIcon from "@/icons/LikeIcon.astro";
+import { RANK_TYPES } from "@/lib/consts";
+import { generateUserId } from "@/lib/users";
+import { getSession } from "auth-astro/server";
+import { prisma } from "prisma/client";
+
+interface Props {
+    id: string;
+    firstName: string;
+}
+
+const session = await getSession(Astro.request)
+
+const userId = session ? generateUserId(session.user) : null
+const rankings = userId == null ?
+    [] : 
+    await prisma.rankings.findMany({
+        where: { userId },
+        select: {
+            characterId: true,
+            rankId: true,
+        },
+    });
+const userRankings: Record<string, string> = {}
+rankings.forEach((rank) => {
+    userRankings[rank.characterId] = rank.rankId
+})
+
+
+const { id, firstName } = Astro.props
+---
+
+<section class="flex flex-col items-center mt-8 gap-y-6 bg-third rounded-md border-2 border-sixth w-[30%] p-4 py-3">
+    {
+        session ? (
+            <div class="flex items-center justify-center gap-4">
+                <img class="size-12 rounded-full" src={session.user?.image} alt={`Image of ${session.user?.name}`} />
+                <div class="flex justify-center flex-col">
+                    <h4 class="text-xl font-bold">{session.user?.name}</h4>
+                    <button id="logout" aria-label="Logout" class="font-light text-sm text-badge hover:scale-105">Logout</button>
+                </div>
+            </div>  
+            <p id="rank-message" aria-label="Your rank message">
+                {
+                    userRankings[id as string] === RANK_TYPES.LIKE || userRankings[id as string] === RANK_TYPES.DISLIKE ? (
+                        `You ${userRankings[id as string].toLowerCase()} ${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`
+                    ) : (
+                        "You haven't ranked this character yet"
+                    )
+                }
+            </p>
+            <div class="flex items-center justify-center gap-4">
+                <button 
+                    id="like-character"
+                    aria-label="Like character button"
+                    class:list={[
+                        "text-badge rank-character",
+                        {
+                            "is-liked": userRankings[id as string] === RANK_TYPES.LIKE,
+                        }
+                    ]}
+                    data-character-id={id}
+                    data-character-first-name={firstName}
+                    data-rank-id={RANK_TYPES.LIKE}
+                >
+                    <LikeIcon />
+                </button>
+                <button 
+                    id="dislike-character"
+                    aria-label="Dislike character button"
+                    class:list={[
+                        "text-badge rank-character",
+                        {
+                            "is-disliked": userRankings[id as string] === RANK_TYPES.DISLIKE
+                        }
+                    ]}
+                    data-character-id={id}
+                    data-character-first-name={firstName}
+                    data-rank-id={RANK_TYPES.DISLIKE}
+                >
+                    <DislikeIcon />
+                </button>
+            </div>
+        ) : (
+            <div class="flex flex-col">
+                <button 
+                    id="login" 
+                    aria-label="Login" 
+                    class="font-light text-sm text-badge"
+                >LOGIN</button>
+                <small class="text-center">To like or dislike, you must login with a Google account</small>
+            </div>
+        )
+    }
+    <audio id="snap-sound" src="/snap-sound.mp3"></audio>
+    <audio id="damage-sound" src="/damage-sound.mp3"></audio>
+</section>
+
+<script>
+    import { RANK_TYPES } from "@/lib/consts";
+
+    document.addEventListener("astro:page-load", () => {
+        const rankButtons = document.querySelectorAll(".rank-character") as NodeListOf<HTMLButtonElement>;
+        const snapSound = document.getElementById("snap-sound") as HTMLAudioElement;
+        const damageSound = document.getElementById("damage-sound") as HTMLAudioElement;
+        const rankMessage = document.getElementById("rank-message") as HTMLParagraphElement;
+    
+        rankButtons.forEach(button => {
+
+            button.onclick = () => {
+
+                const buttonParent = button.parentElement as HTMLElement;
+                let previousRank: HTMLElement;
+                let previousRankIsLiked: boolean
+
+                if (buttonParent && buttonParent.querySelector(".is-liked, .is-disliked")) {
+                    previousRank = buttonParent.querySelector(".is-liked, .is-disliked") as HTMLElement;
+                    previousRankIsLiked = previousRank ? previousRank.classList.contains("is-liked") : false
+                    if (previousRankIsLiked) 
+                        previousRank.classList.remove("is-liked")
+                    else 
+                        previousRank.classList.remove("is-disliked")
+
+                }
+
+                const { characterId, rankId, characterFirstName } = button.dataset;
+
+                const capitalizedName = characterFirstName ? characterFirstName.charAt(0).toUpperCase() + characterFirstName?.slice(1) : "";
+
+                if (rankId === RANK_TYPES.LIKE) {
+                    button.classList.add("is-liked")
+                    rankMessage.innerText = `You like ${capitalizedName}`
+                } else if (rankId === RANK_TYPES.DISLIKE) {
+                    button.classList.add("is-disliked")
+                    rankMessage.innerText = `You dislike ${capitalizedName}`
+                }
+
+
+                
+                const rollBackUI = () => {
+                    if (button.classList.contains("is-liked"))
+                        button.classList.remove("is-liked") 
+                    else if (button.classList.contains("is-disliked")) 
+                        button.classList.remove("is-disliked")
+                    
+                    
+                    if (previousRank && previousRankIsLiked)
+                        previousRank.classList.add("is-liked")
+                    else 
+                        previousRank.classList.add("is-disliked")
+                    
+                    window.toast({
+                        title: `❌ Error ranking or already ranked`,
+                        location: "bottom-center",
+                        dismissable: true,
+                        type: "error",
+                    })
+                    damageSound.play();
+                    
+                }
+
+
+                fetch(`/api/rank/${characterId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ rankId, characterFirstName })
+                })
+                .then(res => {
+                    if (!res.ok) return rollBackUI();
+                    window.toast({
+                        title: `✅ Ranked successfully`,
+                        location: "bottom-center",
+                        dismissable: true,
+                        type: "success",
+                    })
+                    snapSound.play();
+                })
+                .catch(() => rollBackUI())
+            }
+        })
+    })
+
+</script>
+
+<script>
+    const { signIn, signOut } = await import('auth-astro/client')
+    
+    document.addEventListener("astro:page-load", async () => {
+
+        const loginButton = document.querySelector("#login") as HTMLButtonElement
+        const logoutButton = document.querySelector("#logout") as HTMLButtonElement
+    
+        if (loginButton) loginButton.onclick = () => {
+            signIn("github")
+            loginButton.ariaDisabled = "true"
+            loginButton.disabled = true
+            loginButton.textContent = "Logging in..."
+        }
+        if (logoutButton) logoutButton.onclick = () => signOut()
+    })
+
+</script>
+
+<style>
+    .is-liked, .is-disliked {
+        filter: brightness(1.5);
+        pointer-events: none;
+    }
+</style>

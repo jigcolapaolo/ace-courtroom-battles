@@ -41,7 +41,16 @@ export const POST: APIRoute = async ({ params, request }) => {
     const newId = `${userId}-${characterId}`
     const rank = { id: newId, rankId, characterId, characterFirstName, userId, createdAt }
 
+
+
+
     try {
+
+        const existingRank = await prisma.rankings.findUnique({ where: { id: newId } })
+        if (existingRank?.rankId === rank.rankId) {
+            return res("Rank already exists", { status: 409 })
+        }
+
         await prisma.rankings.upsert({
             where: { id: newId },
             update: {
