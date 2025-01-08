@@ -28,6 +28,8 @@ const { quotes } = Astro.props
         const nextQuoteBtn = document.getElementById("next-quote-btn");
         const quotesContainer = document.getElementById("quotes-container");
 
+        if (!prevQuoteBtn || !nextQuoteBtn || !quotesContainer) return
+
         let quotesIndex = 0
 
         quotesContainer.textContent = quotes[quotesIndex]
