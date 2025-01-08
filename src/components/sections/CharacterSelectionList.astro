@@ -4,11 +4,19 @@ import type { Character } from '@/env';
 
 interface Props {
     characterList: Character[]
+    secondList?: boolean
 }
 
-const { characterList } = Astro.props;
+const { characterList, secondList } = Astro.props;
 ---
-<aside class="aside-characters mt-16 grid grid-cols-2 gap-4 gap-y-12">
+<aside 
+    class:list={[
+        "aside-characters hidden lg:grid",
+        {
+            "aside-characters-second": secondList
+        }
+    ]}
+>
     {
         characterList.map(({ id, name, img, type }) => (
         <a 
@@ -33,14 +41,48 @@ const { characterList } = Astro.props;
 
 <style>
     .aside-characters {
-        grid-auto-rows: 80px;
-        align-items: start;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 100px;
+        gap: 16px;
     }
 
-    .aside-characters > .character-link:nth-child(2n) {
-        align-self: end;
-        transform: translate(0, 50%);
+    /* First list */
+    .aside-characters > .character-link:nth-child(1),
+    .aside-characters > .character-link:nth-child(2),
+    .aside-characters > .character-link:nth-child(3),
+    .aside-characters > .character-link:nth-child(4) {
+        grid-column: 1;
+        transform: translate(0,250%);
     }
+
+    .aside-characters > .character-link:nth-child(5),
+    .aside-characters > .character-link:nth-child(6),
+    .aside-characters > .character-link:nth-child(7) {
+        grid-column: 2;
+        transform: translate(0,-350%);
+    }
+
+    /* Second list */
+    .aside-characters-second > .character-link:nth-child(1),
+    .aside-characters-second > .character-link:nth-child(2),
+    .aside-characters-second > .character-link:nth-child(3) {
+        grid-column: 1;
+        transform: translate(0,350%);
+    }
+
+    .aside-characters-second > .character-link:nth-child(4),
+    .aside-characters-second > .character-link:nth-child(5),
+    .aside-characters-second > .character-link:nth-child(6),
+    .aside-characters-second > .character-link:nth-child(7) {
+        grid-column: 2;
+        transform: translate(0,-250%);
+    }
+
+    .aside-characters > .character-link,
+    .aside-characters-second > .character-link {
+        align-self: start;
+    }
+
 
     .character-link {
         @apply relative flex h-12 w-32 items-center justify-center;
