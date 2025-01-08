@@ -31,17 +31,17 @@ rankings.forEach((rank) => {
 const { id, firstName } = Astro.props
 ---
 
-<section class="flex flex-col items-center mt-8 gap-y-6 bg-third rounded-md border-2 border-sixth w-[30%] p-4 py-3">
+<section class="flex flex-col items-center mt-8 gap-y-6 bg-third rounded-md border-2 border-sixth w-[80%] md:w-[40%] p-4 py-3">
     {
         session ? (
             <div class="flex items-center justify-center gap-4">
                 <img class="size-12 rounded-full" src={session.user?.image} alt={`Image of ${session.user?.name}`} />
                 <div class="flex justify-center flex-col">
-                    <h4 class="text-xl font-bold">{session.user?.name}</h4>
+                    <h4 class="text-xl font-bold truncate">{session.user?.name}</h4>
                     <button id="logout" aria-label="Logout" class="font-light text-sm text-badge hover:scale-105">Logout</button>
                 </div>
             </div>  
-            <p id="rank-message" aria-label="Your rank message">
+            <p id="rank-message" aria-label="Your rank message" class="text-center">
                 {
                     userRankings[id as string] === RANK_TYPES.LIKE || userRankings[id as string] === RANK_TYPES.DISLIKE ? (
                         `You ${userRankings[id as string].toLowerCase()} ${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`
@@ -145,10 +145,16 @@ const { id, firstName } = Astro.props
                         button.classList.remove("is-disliked")
                     
                     
-                    if (previousRank && previousRankIsLiked)
+                    if (previousRank && previousRankIsLiked) {
                         previousRank.classList.add("is-liked")
-                    else 
+                        rankMessage.innerText = `You like ${capitalizedName}`
+                    }
+                    else if (previousRank && !previousRankIsLiked) {
                         previousRank.classList.add("is-disliked")
+                        rankMessage.innerText = `You dislike ${capitalizedName}`
+                    } else {
+                        rankMessage.innerText = "You haven't ranked this character yet"
+                    }
                     
                     window.toast({
                         title: `❌ Error ranking or already ranked`,
