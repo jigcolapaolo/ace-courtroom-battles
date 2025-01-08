@@ -6,6 +6,8 @@ import Navbar from "@/components/sections/Navbar.astro"
 
 import CharacterQuotes from "@/components/sections/CharacterQuotes.astro"
 import CharacterLoginRank from "@/components/sections/CharacterLoginRank.astro"
+import CharacterDataLarge from "@/components/sections/CharacterDataLarge.astro"
+import CharacterDataSmall from "@/components/sections/CharacterDataSmall.astro"
 
 
 
@@ -17,17 +19,8 @@ if (!id || !character) {
 }
 const { 
     name,
-    type, 
     quotes, 
-    alias, 
-    birthYear, 
-    eyeColor, 
-    hairColor, 
-    height, 
-    debutEpisode, 
     objectionSound, 
-    musicalTheme, 
-    musicalThemeLink 
 } = character as Character
 const firstName = name.split(' ')[0].toLowerCase()
 ---
@@ -36,80 +29,8 @@ const firstName = name.split(' ')[0].toLowerCase()
     <Navbar />
     <main class="my-10">
         <section class="w-full">
-            <div class="flex justify-center w-full">
-                <aside class="w-[30%] flex flex-col justify-around">
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Alias
-                        </p>
-                        <span>{alias}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Birth Year
-                        </p>
-                        <span>{birthYear}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Debut Episode
-                        </p>
-                        <span>{debutEpisode}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Type 
-                        </p>
-                        <img 
-                        transition:name="character-badge"
-                        class="character-badge w-20 h-auto "
-                        alt="Image of badge" 
-                        src={`/badges/${type}-badge.webp`}
-                        />
-                        <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                    </div>
-                </aside>
-                <picture class="w-[40%]">
-                    <img 
-                        transition:name="character-img-lg"
-                        alt=`Image of ${name}` 
-                        src=`/characters/${firstName}-lg-select.webp` 
-                        style="filter: drop-shadow(0 0 10px var(--color-fourth));"
-                    />
-                </picture>
-                <aside class="w-[30%] flex flex-col justify-around">
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Hair Color
-                        </p>
-                        <span>{hairColor}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Eye Color
-                        </p>
-                        <span>{eyeColor}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Height
-                        </p>
-                        <span>{height}</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <p class="data-title text-lg">
-                            Musical Theme
-                        </p>
-                        <a href={musicalThemeLink} target="_blank">{musicalTheme}</a>
-                    </div>
-                    <div class="flex flex-col items-center justify-center">
-                        <img src="/objection.webp" alt="Image of objection" class="objection-img w-20 h-auto cursor-pointer hover:animate-bouncing" />
-                    </div>
-                </aside>
-            </div>
-            <h1 class="text-5xl text-center font-medium text-badge mb-12" transition:name="character-title">
-                {name}
-            </h1>
+            <CharacterDataLarge character={character} />
+            <CharacterDataSmall character={character} />
         </section>
         <CharacterQuotes quotes={quotes} />
         <CharacterLoginRank id={id} firstName={firstName} />
@@ -120,21 +41,24 @@ const firstName = name.split(' ')[0].toLowerCase()
 
 <script>
     document.addEventListener("astro:page-load", () => {
-        const objection = document.querySelector('.objection-img') as HTMLImageElement;
+        const objectionImgs = document.querySelectorAll('.objection-img') as NodeListOf<HTMLImageElement>;
         const objectionSound = document.getElementById("objection-sound") as HTMLAudioElement;
-        
-        if (!objection) return
 
-        objection.addEventListener('click', () => {
-            objectionSound.play();
-            objection.classList.remove("hover:animate-bouncing");
-            objection.classList.add("animate-tada");
+        if (!objectionImgs) return
 
-            objectionSound.onended = () => {
-                objection.classList.remove("animate-tada");
-                objection.classList.add("hover:animate-bouncing");
-            }
-        }) 
+        objectionImgs.forEach(objection => {
+            objection.addEventListener('click', () => {
+                objectionSound.play();
+                objection.classList.remove("hover:animate-bouncing");
+                objection.classList.add("animate-tada");
+
+                objectionSound.onended = () => {
+                    objection.classList.remove("animate-tada");
+                    objection.classList.add("hover:animate-bouncing");
+                }
+            })
+        })
+
     })
 </script>
 
@@ -147,29 +71,4 @@ const firstName = name.split(' ')[0].toLowerCase()
         gap: 1rem;
     }
 
-    picture {
-        width: 100%;
-        height: 30rem;
-        overflow: hidden;
-        position: relative;
-        mask-image: linear-gradient(
-		  black 60%,
-		  transparent
-		)
-    }
-
-    picture img {
-        position: absolute;
-        top: 20px;
-        width: 100%;
-        height: auto;
-    }
-
-    aside {
-        text-align: center;
-    }
-
-    .data-title {
-        color: var(--color-badge);
-    }
 </style>

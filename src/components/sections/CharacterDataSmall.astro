@@ -1,0 +1,137 @@
+---
+import type { Character } from '@/env'
+
+interface Props {
+    character: Character
+}
+
+const { character } = Astro.props
+
+const {
+    name,
+    type, 
+    alias, 
+    birthYear, 
+    eyeColor, 
+    hairColor, 
+    height, 
+    debutEpisode, 
+    musicalTheme, 
+    musicalThemeLink, 
+} = character
+
+const firstName = name.split(" ")[0].toLowerCase()
+---
+
+<div class="sm:hidden flex flex-col justify-center w-full">
+    <picture class="w-[40%]">
+        <img 
+            transition:name="character-img-lg"
+            alt=`Image of ${name}` 
+            src=`/characters/${firstName}-lg-select.webp` 
+            style="filter: drop-shadow(0 0 10px var(--color-fourth));"
+        />
+    </picture>
+    <h1 class="sm:hidden text-5xl text-center font-medium text-badge mb-12" transition:name="character-title">
+        {name}
+    </h1>
+    <aside class="flex flex-col flex-wrap gap-4 justify-center">
+        <div class="flex justify-around items-center">
+            <div class="flex flex-col items-center justify-center">
+                <p class="data-title text-lg">
+                    Type 
+                </p>
+                <img 
+                transition:name="character-badge"
+                class="character-badge w-20 h-auto "
+                alt="Image of badge" 
+                src={`/badges/${type}-badge.webp`}
+                />
+                <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <img src="/objection.webp" alt="Image of objection" class="objection-img w-20 h-auto cursor-pointer hover:animate-bouncing" />
+            </div>
+        </div>
+    </aside>
+    <table border="1" class="mt-8">
+        <tbody>
+          <tr>
+            <td>Alias</td>
+            <td>{alias}</td>
+          </tr>
+          <tr>
+            <td>Birth Year</td>
+            <td>{birthYear}</td>
+          </tr>
+          <tr>
+            <td>Hair Color</td>
+            <td>{hairColor}</td>
+          </tr>
+          <tr>
+            <td>Eye Color</td>
+            <td>{eyeColor}</td>
+          </tr>
+          <tr>
+            <td>Height</td>
+            <td>{height}</td>
+          </tr>
+          <tr>
+            <td>Debut Episode</td>
+            <td>{debutEpisode}</td>
+          </tr>
+          <tr>
+            <td>Musical Theme</td>
+            <td><a href={musicalThemeLink} target="_blank">{musicalTheme}</a></td>
+          </tr>
+        </tbody>
+      </table>
+      
+</div>
+
+
+<style>
+    picture {
+        width: 100%;
+        height: 25rem;
+        overflow: hidden;
+        position: relative;
+        mask-image: linear-gradient(to bottom, black 60%, transparent), 
+                linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        mask-composite: intersect;
+        
+    }
+
+    picture img {
+        position: absolute;
+        top: 180px;
+        width: 100%;
+        height: auto;
+        transform: scale(1.8);
+    }
+
+    aside {
+        text-align: center;
+    }
+
+    .data-title, tr td:first-child {
+        color: var(--color-badge);
+    }
+
+    table {
+      margin: 20px;
+    }
+
+    table tbody tr {
+        border-bottom: 1px solid var(--color-fourth);
+    }
+    
+    table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td {
+      padding: 8px;
+    }
+
+</style>

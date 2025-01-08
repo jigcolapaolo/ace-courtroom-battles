@@ -1,0 +1,127 @@
+---
+import type { Character } from '@/env'
+
+interface Props {
+    character: Character
+}
+
+const { character } = Astro.props
+
+const {
+    name,
+    type, 
+    alias, 
+    birthYear, 
+    eyeColor, 
+    hairColor, 
+    height, 
+    debutEpisode, 
+    musicalTheme, 
+    musicalThemeLink, 
+} = character
+
+const firstName = name.split(" ")[0].toLowerCase()
+---
+
+<div class="hidden sm:flex justify-center w-full">
+    <aside class="w-[30%] flex flex-col justify-around">
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Alias
+            </p>
+            <span>{alias}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Birth Year
+            </p>
+            <span>{birthYear}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Debut Episode
+            </p>
+            <span>{debutEpisode}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Type 
+            </p>
+            <img 
+            transition:name="character-badge"
+            class="character-badge w-20 h-auto "
+            alt="Image of badge" 
+            src={`/badges/${type}-badge.webp`}
+            />
+            <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+        </div>
+    </aside>
+    <picture class="w-[40%]">
+        <img 
+            transition:name="character-img-lg"
+            alt=`Image of ${name}` 
+            src=`/characters/${firstName}-lg-select.webp` 
+            style="filter: drop-shadow(0 0 10px var(--color-fourth));"
+        />
+    </picture>
+    <aside class="w-[30%] flex flex-col justify-around">
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Hair Color
+            </p>
+            <span>{hairColor}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Eye Color
+            </p>
+            <span>{eyeColor}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Height
+            </p>
+            <span>{height}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <p class="data-title text-lg">
+                Musical Theme
+            </p>
+            <a href={musicalThemeLink} target="_blank">{musicalTheme}</a>
+        </div>
+        <div class="flex flex-col items-center justify-center">
+            <img src="/objection.webp" alt="Image of objection" class="objection-img w-20 h-auto cursor-pointer hover:animate-bouncing" />
+        </div>
+    </aside>
+</div>
+<h1 class="hidden sm:block text-5xl text-center font-medium text-badge mb-12" transition:name="character-title">
+    {name}
+</h1>
+
+<style>
+    picture {
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+        mask-image: linear-gradient(
+		  black 60%,
+		  transparent
+		)
+    }
+
+    picture img {
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        height: auto;
+    }
+
+    aside {
+        text-align: center;
+    }
+
+    .data-title {
+        color: var(--color-badge);
+    }
+</style>
