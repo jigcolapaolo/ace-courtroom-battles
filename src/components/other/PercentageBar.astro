@@ -1,0 +1,43 @@
+---
+interface Props {
+    likes: number;
+    dislikes: number;
+}
+
+const { likes, dislikes } = Astro.props
+---
+
+<div class="percentage-bar">
+    <div class="likes" style=`width: ${likes}%`>
+        {likes}%
+    </div>
+    <div class="dislikes" style=`width: ${dislikes}%`>
+        {dislikes}%
+    </div>
+</div>
+
+<style>
+    .percentage-bar {
+        display: flex;
+        width: 100%;
+        height: 20px;
+        background-color: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .likes {
+        background-color: #4caf50;
+        color: white;
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .dislikes {
+        background-color: #f44336;
+        color: white;
+        text-align: center;
+        line-height: 20px;
+    }
+
+</style>

@@ -12,6 +12,10 @@ export const NAVBAR_LINKS = [
     {
         name: "BATTLES",
         url: "/battles"
+    },
+    {
+        name: "RANKINGS",
+        url: "/rankings"
     }
 ]
 

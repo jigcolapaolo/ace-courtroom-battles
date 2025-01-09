@@ -1,0 +1,121 @@
+---
+import PercentageBar from "@/components/other/PercentageBar.astro";
+import Navbar from "@/components/sections/Navbar.astro";
+import Layout from "@/layouts/Layout.astro";
+import type { CharacterRanking } from "@/env";
+import { RANK_TYPES } from "@/lib/consts";
+
+
+let characterRankings: CharacterRanking[] = []
+characterRankings = 
+await fetch("http://localhost:4321/api/rankings/get-all-rankings.json", {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json",
+    },
+})
+.then((res) => {
+    if (!res.ok) Astro.redirect("/404")
+    return res.json()
+})
+.then((data) => {
+    return data.groupedCharacters
+})
+.catch((err) => {
+    console.error(err)
+    Astro.redirect("/404")
+})
+
+---
+
+<Layout title="Rankings">
+    <Navbar />
+    <section class="my-40">
+        <h3 class="text-5xl text-center font-medium text-badge">
+            Character Rankings
+        </h3>
+        <p class="mt-10 text-lg text-center">
+            Explore character rankings with like and dislike percentages. Vote for your favorite!
+        </p>
+        <article class="my-20 flex flex-col gap-y-20">
+            {
+                characterRankings && characterRankings.map(({ characterId, characterFirstName, totalRankings, ranks }) => 
+                    <div class="flex justify-center items-center gap-x-4">
+                        <div class="flex flex-col items-center justify-center relative">
+                            <a 
+                                class="character-link"
+                                title={`Visit ${characterFirstName} page`}
+                                href={`/characters/${characterId}`}
+                            >
+                                <img 
+                                    decoding="async"
+                                    src={`/characters/${characterFirstName}-sm-select.webp`} 
+                                    alt={`Picture of ${characterFirstName}`} 
+                                    loading="lazy" 
+                                    class="character-img w-28 mb-[5rem] h-auto transition group-hover:scale-110" 
+                                />
+                            </a>
+                            <h3 class="text-3xl text-center font-medium text-badge absolute top-[1.5rem] pointer-events-none">
+                                {characterFirstName.charAt(0).toUpperCase() + characterFirstName.slice(1)}
+                            </h3>
+                        </div>
+                        <div class="flex flex-col w-full gap-y-4">
+                            <PercentageBar 
+                                likes={ranks[RANK_TYPES.LIKE]} 
+                                dislikes={ranks[RANK_TYPES.DISLIKE]} 
+                            />
+                            <p class="text-center">Total Feedback: {totalRankings}</p>  
+
+                        </div>
+                    </div>
+                )
+            }
+              
+        </article>
+    </section>
+</Layout>
+
+<style>
+
+    .character-link {
+        @apply relative flex flex-shrink-0 h-12 w-32 items-center justify-center;
+        background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1) 0%,
+            transparent 40%,
+            transparent 100%
+        );
+        transition: all 0.5s ease;
+    }
+
+    .character-link::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        display: block;
+        background: linear-gradient(to bottom, var(--color-fifth) 0%, transparent);
+        opacity: 0;
+        height: 50%;
+        transition:
+            opacity 0.2s ease-in-out,
+            height 0.2s ease-in-out;
+    }
+
+    .character-link:hover::before {
+        opacity: 0.8;
+        height: 100%;
+    }
+
+    .character-img {
+        transition: transform 0.3s ease-in-out;
+        mask-image: linear-gradient(
+		  black 80%,
+		  transparent
+		)
+    }
+
+    .character-link:hover .character-img {
+        transform: scale(1.1);
+    }
+</style>
+

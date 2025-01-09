@@ -20,3 +20,10 @@ export interface Character {
     musicalTheme: string;
     musicalThemeLink: string;
 }
+
+export interface CharacterRanking {
+    characterId: string;
+    characterFirstName: string;
+    totalRankings: number;
+    ranks: Record<string, number>;
+}
