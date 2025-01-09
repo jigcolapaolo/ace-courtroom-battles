@@ -1,0 +1,54 @@
+---
+import CrossIcon from "@/icons/CrossIcon.astro";
+import HamburgerIcon from "@/icons/HamburgerIcon.astro";
+import NavbarLinks from "../sections/NavbarLinks.astro";
+
+
+---
+
+<button class="hamburger md:hidden" aria-label="Hamburger menu">
+    <HamburgerIcon />
+</button>
+
+<dialog open={false} class="clip-dialog relative md:hidden h-screen w-screen bg-transparent backdrop:bg-black-70 backdrop:backdrop-blur-xl">
+    <button class="modal-close absolute top-0 right-0" aria-label="Close dialog">
+        <CrossIcon />
+    </button>
+    <NavbarLinks modalLinks />
+</dialog>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+
+        const clipDialog = document.querySelector('.clip-dialog') as HTMLDialogElement
+        const hamburgerBtn = document.querySelector('.hamburger') as HTMLDivElement
+        const crossBtn = document.querySelector('.modal-close') as HTMLButtonElement
+    
+        
+        hamburgerBtn.addEventListener('click', () => {
+            clipDialog.showModal()
+            hamburgerBtn.classList.toggle('open')
+            document.body.style.overflow = 'hidden'
+        })
+
+        crossBtn.addEventListener('click', () => {
+            clipDialog.close()
+            hamburgerBtn.classList.toggle('open')
+            document.body.style.overflow = 'auto'
+        })
+
+        window.addEventListener('resize', () => {
+            clipDialog.close()
+            hamburgerBtn.classList.remove('open')
+            document.body.style.overflow = 'auto'
+        })
+
+    });
+
+</script>
+
+<style>
+    .hamburger:hover svg path {
+        stroke: violet;
+    }
+</style>

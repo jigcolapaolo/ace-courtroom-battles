@@ -1,0 +1,62 @@
+---
+import ScalesIcon from "@/icons/ScalesIcon.astro";
+import { NAVBAR_LINKS } from "@/lib/consts";
+
+interface Props {
+    modalLinks?: boolean
+}
+
+const { modalLinks = false } = Astro.props
+
+const currentUrl = Astro.url.pathname
+
+const isActive = (url: string) => {
+    return url === currentUrl
+}
+---
+
+<ul 
+    class:list={[
+        {
+            "flex flex-col h-full w-full justify-around items-center": modalLinks,
+            "hidden md:flex justify-around items-center w-full": !modalLinks
+        }
+    ]}
+>
+    {
+        NAVBAR_LINKS.map((link) => (
+            <li class="flex gap-x-2">
+                <a 
+                    href={link.url} 
+                    class:list={[
+                        {
+                            "active": isActive(link.url),
+                            "text-xl": modalLinks
+                        }
+                    ]}
+                >
+                    {link.name}
+                </a>
+                {isActive(link.url) ? <ScalesIcon wSize="24" hSize="24" hasAnimation={false} /> : ""}
+            </li>
+        ))
+    }
+</ul>
+
+
+<style>
+    
+    a {
+        display: inline-block;
+        color: var(--color-secondary);
+        transition: color 0.4s ease;
+
+        &:hover {
+            color: var(--color-badge);
+        }
+    }
+
+    .active {
+        color: var(--color-badge);
+    }
+</style>
