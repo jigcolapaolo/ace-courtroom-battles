@@ -42,10 +42,10 @@ const firstName = name.split(" ")[0].toLowerCase()
                     Type 
                 </p>
                 <img 
-                transition:name="character-badge"
-                class="character-badge w-20 h-auto "
-                alt="Image of badge" 
-                src={`/badges/${type}-badge.webp`}
+                  transition:name="character-badge"
+                  class="character-badge w-20 h-auto"
+                  alt="Image of badge" 
+                  src={`/badges/${type}-badge.webp`}
                 />
                 <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
             </div>
@@ -108,6 +108,25 @@ const firstName = name.split(" ")[0].toLowerCase()
         width: 100%;
         height: auto;
         transform: scale(1.8);
+
+        @media screen and (min-width: 344px) {
+          transform: scale(1.7);
+        }
+        @media screen and (min-width: 400px) {
+          transform: scale(1.6);
+        }
+        @media screen and (min-width: 450px) {
+          transform: scale(1.5);
+        }
+        @media screen and (min-width: 480px) {
+          transform: scale(1.4);
+        }
+        @media screen and (min-width: 530px) {
+          transform: scale(1.3);
+        }
+        @media screen and (min-width: 600px) {
+          transform: scale(1.2);
+        }
     }
 
     aside {
