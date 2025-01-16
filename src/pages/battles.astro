@@ -1,9 +1,96 @@
 ---
+import VersusText from "@/components/other/VersusText.astro";
 import Navbar from "@/components/sections/Navbar.astro";
+import ScalesIcon from "@/icons/ScalesIcon.astro";
 import Layout from "@/layouts/Layout.astro";
+import { BATTLES } from "@/lib/consts";
 
 ---
 
 <Layout title="Battles">
     <Navbar />
+    <section class="my-40">
+        <h3 class="text-5xl text-center font-medium text-badge">
+            Courtroom Battles
+        </h3>
+        <p class="mt-10 text-lg text-center">
+            Discover epic battles between attorneys and prosecutors. Select one to relive its best moments!
+        </p>
+        <article class="my-20 flex flex-col md:flex-row flex-wrap justify-center items-center gap-28">
+            {
+                BATTLES.map(({ attorney, prosecutor, }) => {
+
+                    const attorneyFirstName = attorney.split(" ")[0].charAt(0).toLowerCase() + attorney.split(" ")[0].slice(1);
+                    const prosecutorFirstName = prosecutor.split(" ")[0].charAt(0).toLowerCase() + prosecutor.split(" ")[0].slice(1);
+
+                    const invertImg = prosecutorFirstName === "miles"
+
+                    const translateProsecutorImg = prosecutorFirstName === "franziska"
+                    const translateAttorneyImg = attorneyFirstName === "mia"
+
+                    return(
+                        <a 
+                            href={`/battles/${attorneyFirstName}-vs-${prosecutorFirstName}`} 
+                            aria-label={`Battle between ${attorney} and ${prosecutor}`}
+                            title={`Battle between ${attorney} and ${prosecutor}`}
+                            class="relative w-[100%] md:w-[40%] flex items-center justify-center gap-x-20 hover:scale-105 transition group"
+                        >
+                            <picture class="mr-6">
+                                <img 
+                                    decoding="async" 
+                                    src={`/characters/${attorneyFirstName}-sm-select.webp`} 
+                                    alt={`Image of ${attorneyFirstName}`} 
+                                    class:list={[
+                                        "w-full h-auto",
+                                        {
+                                            "translate-y-[-20px]": translateAttorneyImg,
+                                        }
+                                    ]}
+                                />
+                            </picture>
+                            <div class="absolute w-[310px] h-[100px] rounded-full bg-third blur-3xl -z-50 group-hover:blur-xl transition"></div>
+                            <VersusText 
+                                attorney={attorney} 
+                                prosecutor={prosecutor} 
+                                isInList={true}
+                                class="absolute text-xl italic font-extrabold group-hover:scale-125 transition" 
+                            />
+                            <div class="scales-container absolute">
+                                <ScalesIcon wSize="200" hSize="200" hasAnimation={false} color="text-primary" />
+                            </div>
+                            <picture class="ml-6">
+                                <img
+                                    decoding="async"
+                                    src={`/characters/${prosecutorFirstName}-sm-select.webp`}
+                                    alt={`Image of ${prosecutor}`}
+                                    class:list={[
+                                        "w-full h-auto",
+                                        {
+                                            "scale-x-[-1]": invertImg,
+                                            "translate-y-[-20px]": translateProsecutorImg
+                                        }
+                                    ]}
+                                />
+                            </picture>
+                        </a>
+                    )
+            })
+            }
+        </article>
+    </section>
 </Layout>
+
+<style>
+    .scales-container {
+        opacity: 0.2;
+        z-index: -1;
+    }
+
+    img {
+        mask-image: linear-gradient(
+		  black 40%,
+		  transparent
+		);
+    }
+
+</style>
