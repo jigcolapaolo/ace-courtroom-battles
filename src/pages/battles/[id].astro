@@ -1,0 +1,210 @@
+---
+import CaseTyping from "@/components/other/CaseTyping.astro";
+import CourtroomBg from "@/components/other/CourtroomBg.astro";
+import TrialVideo from "@/components/other/TrialVideo.astro";
+import VersusText from "@/components/other/VersusText.astro";
+import Navbar from "@/components/sections/Navbar.astro";
+import type { Battle } from "@/env";
+import Layout from "@/layouts/Layout.astro";
+import { BATTLES } from "@/lib/consts";
+
+const { id } = Astro.params
+
+const battle: Battle | undefined = BATTLES.find(({ id: battleId }) => battleId === id)
+if(!id || !battle) {
+    return Astro.redirect("/404")
+}
+
+const {
+    case: {
+        caseName,
+        incidentType,
+        victim,
+        cause
+    },
+    attorney,
+    attorneySpriteUrls,
+    prosecutor,
+    prosecutorSpriteUrls,
+    courtroom: {
+        name: courtroomName,
+        imgUrl: courtroomImgUrl,
+        theme: courtroomTheme,
+    },
+    room,
+    game,
+    scenesLinks,
+    openingStatementLines
+} = battle
+
+const attorneyFirstName = attorney.split(" ")[0].charAt(0).toLowerCase() + attorney.split(" ")[0].slice(1);
+const prosecutorFirstName = prosecutor.split(" ")[0].charAt(0).toLowerCase() + prosecutor.split(" ")[0].slice(1);
+
+const now = new Date();
+const day = now.getDate();
+const month = now.toLocaleString('en-US', { month: 'long' });
+const time = now.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+});
+
+const prosecutorInverted = prosecutorFirstName === "miles"
+
+---
+
+<Layout title=`Battles - ${attorney} vs ${prosecutor}`>
+    <Navbar />
+    <main class="my-10">
+        <section class="flex justify-between items-center relative">
+
+            <div class="pictures-container">
+                <picture class="sm:-translate-x-[50px]">
+                    <img 
+                        decoding="async" 
+                        src={`/characters/${attorneyFirstName}-lg-select.webp`} 
+                        alt={`Image of ${attorneyFirstName}`} 
+                        class=""
+                    />
+                </picture>
+                <picture class="sm:translate-x-[50px]">
+                    <img 
+                        decoding="async" 
+                        src={`/characters/${prosecutorFirstName}-lg-select.webp`} 
+                        alt={`Image of ${prosecutor}`} 
+                        class={" "}
+                        class:list={[
+                            "", 
+                            {
+                                "scale-x-[-1]": prosecutorInverted
+                            }
+                        ]}
+                    />
+                </picture>
+            </div>
+            <VersusText 
+                attorney={attorney} 
+                prosecutor={prosecutor} 
+                class="text-5xl font-extrabold absolute inset-0"
+            />
+        </section>
+        <section class="flex flex-col justify-center items-center text-center">
+            <div class="my-10 w-[100%] md:w-[50%]">
+                <div class="bg-third rounded-md 
+                    border-2 border-sixth h-auto p-2 w-34 grid place-items-center pointer-events-none">
+                    <p class="typed-text flex flex-col gap-y-2 text-xl md:text-2xl text-[#06DF0B]">
+                        <span>{month} {day} - {time}</span> 
+                        <span>{courtroomName}</span>
+                        <span>{room}</span>
+                        <span>({game})</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="w-full my-10">
+            <h3 class="text-5xl text-center font-medium text-badge">
+                Case Details
+            </h3>
+            <article class="case-section py-10 my-10 flex flex-col gap-y-4">
+                <div class="flex justify-center items-center gap-x-4">
+                    <p class="case-header">Case Name:</p>
+                    <h4 class="case-details">
+                        {caseName}
+                    </h4>
+                </div>
+                <div class="flex justify-center items-center gap-x-4">
+                    <p class="case-header">Incident Type:</p>
+                    <h4 class="case-details">
+                        {incidentType}
+                    </h4>
+                </div>
+                <div class="flex justify-center items-center gap-x-4">
+                    <p class="case-header">Victim:</p>
+                    <h4 class="case-details">
+                        {victim}
+                    </h4>
+                </div>
+                <div class="flex justify-center items-center gap-x-4">
+                    <p class="case-header">Cause:</p>
+                    <h4 class="case-details">
+                        {cause}
+                    </h4>
+                </div>
+
+            </article>
+        </section>
+        <CaseTyping  
+            attorney={attorney}
+            attorneySpriteUrls={attorneySpriteUrls}
+            prosecutor={prosecutor}
+            prosecutorSpriteUrls={prosecutorSpriteUrls}
+            openingStatementLines={openingStatementLines}
+        />
+        <section class="my-40">
+            <h3 class="text-5xl text-center font-medium text-badge">
+                Trial
+            </h3>
+            <p class="my-10 text-lg text-center">
+                Experience the courtroom battle
+            </p>
+            <article class="flex flex-col justify-center items-center gap-12">
+                {
+                    scenesLinks.map((sceneLink) => (
+                        <TrialVideo battleId={id} sceneLink={sceneLink} />
+                    ))
+                }
+            </article>
+        </section>
+    </main>
+    <CourtroomBg imgUrl={courtroomImgUrl} />
+    <audio autoplay loop id="courtroom-theme" src={courtroomTheme} ></audio>
+</Layout>
+
+<style>
+
+    .case-section {
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        background:
+            linear-gradient(to right, transparent, var(--color-secondary), transparent) top,
+            linear-gradient(to right, transparent, var(--color-secondary), transparent) bottom
+        ;
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+    }
+
+    .case-header {
+        @apply text-xl text-center text-badge w-1/2 sm:w-1/4;
+    }
+    
+    .case-details {
+        @apply text-lg text-center w-1/2 sm:w-1/4;
+    }
+
+    .pictures-container {
+        @apply flex justify-between min-w-[30rem] -translate-x-[25vw] sm:translate-x-0 sm:min-w-[100%];
+    }
+
+    @media screen and (min-width: 330px) {.pictures-container { @apply -translate-x-[20vw]; }}
+    @media screen and (min-width: 370px) {.pictures-container { @apply -translate-x-[15vw]; }}
+    @media screen and (min-width: 390px) {.pictures-container { @apply -translate-x-[10vw]; }}
+    @media screen and (min-width: 410px) {.pictures-container { @apply -translate-x-[8vw]; }}
+    @media screen and (min-width: 430px) {.pictures-container { @apply -translate-x-[6vw]; }}
+    @media screen and (min-width: 450px) {.pictures-container { @apply -translate-x-[5vw]; }}
+    @media screen and (min-width: 470px) {.pictures-container { @apply translate-x-0 min-w-[100%]; }}
+    
+    picture {
+        width: 100%;
+        height: 40rem;
+        mask-image: linear-gradient(black 10%, transparent),
+            linear-gradient(to left, black 90%, transparent)
+        ;
+        mask-composite: intersect;
+    }
+
+    img {
+        height: 100%;
+        width: auto;
+        object-fit: cover;
+    }
+
+</style>
