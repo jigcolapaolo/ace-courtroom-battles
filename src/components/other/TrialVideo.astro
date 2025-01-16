@@ -1,0 +1,76 @@
+---
+import type { SceneLink } from "@/env";
+import PlayIcon from "@/icons/PlayIcon.astro";
+
+interface Props {
+    battleId: string
+    sceneLink: SceneLink
+}
+
+const { battleId, sceneLink } = Astro.props
+
+const { id, iframe, description} = sceneLink
+---
+
+<div>
+    <div
+        id={`${battleId}-video-container-${id}`}
+        class="video-container relative flex flex-col bg-black items-center justify-center rounded-md border-4 border-fourth w-full md:w-[640px] md:h-[360px]"
+    >
+    
+        <img 
+            id={`${battleId}-video-thumb-${id}`}
+            decoding="async"
+            loading="lazy"
+            src=`/battles-thumbs/${battleId}/${id}.webp`
+            alt={description} 
+            class="video-thumb w-full h-full" 
+        />
+        <button id={`${battleId}-play-video-btn-${id}`} class="play-video-btn absolute flex items-center justify-center">
+            <PlayIcon />
+        </button>
+    </div>
+    <p class="text-center text-md mt-2">{description}</p>
+</div>
+
+<style>
+    .video-container {
+        z-index: 999999;
+        overflow: hidden;
+    }
+
+
+    img {
+        filter: contrast(1.2);
+    }
+</style>
+
+<script define:vars={{ iframe, battleId, id }}>
+    document.addEventListener("astro:page-load", () => {
+        const playVideoBtns = document.querySelectorAll(".play-video-btn");
+        const courtroomTheme = document.getElementById("courtroom-theme");
+
+        playVideoBtns.forEach(playVideoBtn => {
+            playVideoBtn.addEventListener("click", () => {
+                if (playVideoBtn.id === `${battleId}-play-video-btn-${id}`) {
+                    courtroomTheme.pause();
+
+                    const videoThumb = document.getElementById(`${battleId}-video-thumb-${id}`)
+                    const videoContainer = document.getElementById(`${battleId}-video-container-${id}`)
+
+
+                    playVideoBtn.classList.add("hidden");
+                    videoThumb.classList.add("hidden");
+
+                    videoContainer.innerHTML = `${iframe}`
+
+                    const iframeRender = videoContainer.querySelector('iframe');
+                    if (iframeRender) {
+                        iframeRender.style.width = "100%";
+                        iframeRender.style.height = "360px";
+                    }
+                }
+            })
+        })
+    })
+</script>
