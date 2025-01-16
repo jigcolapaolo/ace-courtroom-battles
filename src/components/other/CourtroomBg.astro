@@ -1,0 +1,35 @@
+---
+interface Props {
+    imgUrl: string
+}
+
+const { imgUrl } = Astro.props
+---
+
+<div style={
+    `background-image: url('${imgUrl}');`
+}></div>
+
+
+<style>
+    div {
+        position: fixed;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        inset: 0;
+        height: 100%;
+        width: auto;
+        pointer-events: none;
+        z-index: -2;
+        opacity: 0.2;
+
+        mask-image: linear-gradient(to bottom, black 80%, transparent),
+                linear-gradient(to top, black 80%, transparent),
+                linear-gradient(to left, transparent, black 60%, black 60%, transparent),
+                linear-gradient(to right, transparent, black 60%, black 60%, transparent);
+        mask-composite: intersect;
+
+
+    }
+</style>
