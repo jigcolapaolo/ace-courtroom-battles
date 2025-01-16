@@ -1,0 +1,196 @@
+---
+import type { OpeningStatementLine, Sprites } from '@/env'
+import PlayLinesIcon from '@/icons/PlayLinesIcon.astro'
+
+
+interface Props {
+    attorney: string
+    attorneySpriteUrls: Sprites
+    prosecutor: string
+    prosecutorSpriteUrls: Sprites
+    openingStatementLines: OpeningStatementLine[]
+}
+
+const { attorney, attorneySpriteUrls, prosecutor, prosecutorSpriteUrls, openingStatementLines } = Astro.props
+
+const prosecutorFirstNameLower = prosecutor.split(" ")[0].toLowerCase() 
+const attorneyFirstNameLower = attorney.split(" ")[0].toLowerCase()
+
+const attorneyTranslateConditions = [
+    attorneyFirstNameLower === "athena",
+    attorneyFirstNameLower === "apollo",
+]
+
+const prosecutorTranslateConditions = [
+    prosecutorFirstNameLower === "gaspen",
+    prosecutorFirstNameLower === "klavier",
+    prosecutorFirstNameLower === "nahyuta",
+]
+
+const invertSprite = attorneyFirstNameLower === "miles"
+const translateAttorneySprite = attorneyTranslateConditions.includes(true)
+const translateProsecutorSprite = prosecutorTranslateConditions.includes(true)
+---
+
+<div class="my-10 w-[100%] flex flex-col justify-center items-center">
+    <div class="w-full flex flex-col justify-center items-center">
+        <div class="w-[80%] md:w-[60%]">
+            <picture class="w-[100%] flex">
+                <img 
+                    id="prosecutor-sprite"
+                    src={prosecutorSpriteUrls.idle}
+                    alt=`Sprite of ${prosecutor}` 
+                    class:list={[
+                        "w-[256px] h-auto scale-x-[-1] pointer-events-none",
+                        {
+                            "translate-y-5": translateProsecutorSprite,
+                            "translate-y-8": !translateProsecutorSprite
+                        }
+                    ]}
+                />
+            </picture>
+            <div class="bg-third rounded-md 
+                border-2 border-sixth h-auto p-2 w-[100%]">
+                <p id="prosecutor-sentence" class="typed-text text-md md:text-2xl cursor-default">
+                    {openingStatementLines[0].line}
+                </p>
+            </div>
+        </div>
+        <button id="next-quote-btn" aria-label="Next quote" class="next-quote-btn hover:scale-110 hover:brightness-110">
+            <PlayLinesIcon />
+        </button>
+        <div class="w-[80%] md:w-[60%]">
+            <picture class="w-[100%] flex justify-end">
+                <img 
+                    id="attorney-sprite"
+                    src={attorneySpriteUrls.idle}
+                    alt=`Sprite of ${attorney}` 
+                    class:list={[
+                        "w-[256px] h-auto scale-x-[-1] pointer-events-none",
+                        {
+                            "scale-x-[1]": invertSprite,
+                            "translate-y-5": translateAttorneySprite,
+                            "translate-y-8": !translateAttorneySprite,
+
+                        }
+                    ]}
+                />
+            </picture>
+            <div class="bg-third rounded-md case-typing
+                border-2 border-sixth h-auto p-2 w-[100%]">
+                <p id="attorney-sentence" class="typed-text text-md md:text-2xl cursor-default">
+                    ...
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<audio id="type-sound" src="/type-talk-sound.mp3"></audio>
+
+<script define:vars={{ attorneySpriteUrls, prosecutorSpriteUrls, openingStatementLines }}>
+
+    let linesIndex = 0;
+    let typingInterval = null
+
+    const attorneySentence = document.getElementById("attorney-sentence");
+    const prosecutorSentence = document.getElementById("prosecutor-sentence");
+    const prosecutorSprite = document.getElementById("prosecutor-sprite");
+    const attorneySprite = document.getElementById("attorney-sprite");
+        
+    const typeSound = document.getElementById("type-sound");
+    const nextQuoteBtn = document.getElementById("next-quote-btn");
+
+    if (!attorneySentence || !prosecutorSentence) return
+    window.addEventListener("popstate", () => {
+        clearInterval(typingInterval);
+    })
+
+    const setLinesToType = (lineToType) => {
+        nextQuoteBtn.disabled = true
+            
+        let currentIndex = 0;
+
+        typingInterval = setInterval(() => {
+    
+            if (typeSound.paused) typeSound.play()
+    
+            if (lineToType.speaker === "attorney") {
+                attorneySentence.textContent += lineToType.line[currentIndex];
+                currentIndex++;
+            }
+
+            if (lineToType.speaker === "prosecutor") {
+                prosecutorSentence.textContent += lineToType.line[currentIndex];
+                currentIndex++;
+            }
+
+    
+            if (currentIndex >= lineToType.line.length) {
+                clearInterval(typingInterval);
+                typeSound.pause()
+                nextQuoteBtn.disabled = false
+                nextQuoteBtn.classList.add("animate-jelly");
+                nextQuoteBtn.classList.remove("next-quote-disabled");
+                prosecutorSprite.src = prosecutorSpriteUrls.idle;
+                attorneySprite.src = attorneySpriteUrls.idle;
+            }
+        }, 50);
+    }
+
+
+    nextQuoteBtn.addEventListener("click", () => {
+        linesIndex++;
+        if (linesIndex < openingStatementLines.length) {
+
+            nextQuoteBtn.classList.remove("animate-jelly");
+            nextQuoteBtn.classList.add("next-quote-disabled");
+
+            if (openingStatementLines[linesIndex].speaker === "attorney") {
+                prosecutorSentence.textContent = "...";
+                attorneySentence.textContent = "";
+                attorneySprite.src = attorneySpriteUrls.talking;
+            } else {
+                attorneySentence.textContent = "...";
+                prosecutorSentence.textContent = "";
+                prosecutorSprite.src = prosecutorSpriteUrls.talking;
+            }
+
+            setLinesToType(openingStatementLines[linesIndex]);
+                
+
+            if (linesIndex === openingStatementLines.length - 1) nextQuoteBtn.remove();
+        }
+    })
+
+</script>
+
+<style>
+    img {
+        /* mask-image: linear-gradient(
+          black 70%,
+          transparent
+        ); */
+        z-index: -1;
+        opacity: 1;
+    }
+
+    .case-typing {
+        opacity: 1;
+        z-index: 9999;
+    }
+     
+    .next-quote-btn {
+        background-color: var(--color-fourth);
+        border-radius: 8px;
+        padding: 8px 16px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        cursor: pointer;
+    }
+
+    .next-quote-disabled {
+        pointer-events: none;
+        fill: gray;
+        filter: brightness(0.5);
+    }
+</style>
