@@ -1,0 +1,31 @@
+---
+interface Props {
+    attorney: string
+    prosecutor: string
+    isInList?: boolean
+    class?: string
+}
+
+const { attorney, prosecutor, isInList = false, class: className } = Astro.props
+---
+
+<h3 class={`versus-text ${className}`}>
+    {attorney}
+    <span> vs </span>
+    {prosecutor}
+    <div 
+        class:list={[
+            {
+                "bg-third w-[100%] h-[100%] absolute z-[-1] rounded-md blur-xl opacity-60 group-hover:opacity-100 transition": isInList
+            }
+        ]}
+    />
+</h3>
+
+<style>
+    .versus-text {
+        @apply flex flex-col items-center justify-center text-center text-badge transition;
+        border-radius: 8px;
+        z-index: 999;
+    }
+</style>
