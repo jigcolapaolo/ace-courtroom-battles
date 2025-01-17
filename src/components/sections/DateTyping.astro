@@ -1,54 +1,31 @@
 <section class="mx-auto flex flex-col justify-center items-center text-center">
     <div class="mt-8">
-        <div class="date-typing bg-third rounded-md 
-            border-2 border-sixth h-auto p-2 w-34 grid place-items-center pointer-events-none">
+        <div class="bg-third rounded-md 
+            border-2 border-sixth p-2 w-[19rem] md:w-[30rem] h-[7.5rem] md:h-[9.5rem] pointer-events-none">
+            <p class="typed-text date-typing w-full h-full whitespace-pre-wrap text-md md:text-2xl text-[#06DF0B]">
+            </p>
         </div>
     </div>
 
-    <a 
-        id="enter-courtroom"
-        class={`
-            border-sixth border-2 bg-third font-medium uppercase text-lg
-            px-4 py-1 mt-8
-            hover:bg-badge-hover hover:scale-125 hover:text-third transition inline-block
-        `}
-        href="/characters"
-        rel="noopener noreferrer"
-    >
-        Enter Courtroom
-    </a>
-
     <audio id="typing-sound" src="/ace-typing.mp3" ></audio>
-    <audio id="hammer-sound" src="/hammer-sound.mp3" ></audio>
 </section>
 
 <script>
-    import { navigate } from "astro:transitions/client";
-
-    document.addEventListener("astro:page-load", () => {
-        const enterCourtroom = document.getElementById("enter-courtroom") as HTMLAnchorElement;
-    
-        if (!enterCourtroom) return
-
-        enterCourtroom.addEventListener("click", (e) => {
-            e.preventDefault();
-            const hammerSound = document.getElementById("hammer-sound") as HTMLAudioElement;
-            enterCourtroom.classList.add("animate-shake");
-            hammerSound.play();
-            
-            hammerSound.onended = () => {
-                navigate("/characters");
-            }
-        })
-    })
 
     document.addEventListener("astro:page-load", () => {
         const typingSound = document.getElementById("typing-sound") as HTMLAudioElement;
         const dateTyping = document.querySelector('.date-typing') as HTMLDivElement;
-
+        let typingInterval: number | NodeJS.Timeout | null = null;
+        
         if (!dateTyping) return
 
+        window.addEventListener("popstate", () => {
+            if (typingInterval) clearInterval(typingInterval);
+
+        })
+        
         const hasVisited = localStorage.getItem('hasVisited');
+        const hasAcceptedSpoilers = localStorage.getItem('hasVisitedDialog');
         
         const now = new Date();
         const day = now.getDate();
@@ -56,23 +33,39 @@
         const time = now.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit' 
-    });
+        });
+        let currentIndex = 0;
+        const stringToType = `${month} ${day} - ${time}\nStep into the courtroom drama\nand relive the legendary battles\nbetween attorneys and prosecutors!`;
 
-    if (!hasVisited) {
-        typingSound.play();
+        if (!hasVisited && hasAcceptedSpoilers) {
+            typingSound.play();
 
-        dateTyping.innerHTML = `
-            <img src="https://readme-typing-svg.demolab.com?font=DotGothic16&duration=2000&pause=1&color=06DF0B&repeat=false&center=true&multiline=true&random=false&width=435&height=130&size=23&lines=${month}+${day}+-+${time};+Step+into+the+courtroom+drama;+and+relive+the+legendary+battles;+between+attorneys+and+prosecutors!" alt="Typing SVG" />
-        `;
-        localStorage.setItem('hasVisited', 'true');
-    } else {
-        dateTyping.innerHTML = `
-            <p class="typed-text text-md md:text-2xl text-[#06DF0B]">
-                ${month} ${day} - ${time}<br>Step into the courtroom drama<br>and relive the legendary battles<br>between attorneys and prosecutors!
-            </p>
-        `;
-    }
+            typingInterval = setInterval(() => {
+
+
+                dateTyping.textContent += stringToType[currentIndex];
+                currentIndex++;
+
+                typingSound.onended = () => {
+                    typingSound.play();
+                }
+
+                if (currentIndex >= stringToType.length) {
+                    if (typingInterval) clearInterval(typingInterval);
+                    typingSound.pause();
+                }
+            }, 80);
+
+            localStorage.setItem('hasVisited', 'true');
+
+
+        } else {
+            dateTyping.parentElement!.innerHTML = `
+                <p class="typed-text date-typing text-md md:text-2xl text-[#06DF0B]">
+                    ${month} ${day} - ${time}<br>Step into the courtroom drama<br>and relive the legendary battles<br>between attorneys and prosecutors!
+                </p>
+            `;
+        }
 });
-
 
 </script>
