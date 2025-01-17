@@ -1,5 +1,6 @@
 ---
 import Pattern from '@/components/other/Pattern.astro';
+import SpoilerDialog from '@/components/other/SpoilerDialog.astro';
 import Toast from '@/components/other/Toast.astro';
 import Footer from '@/components/sections/Footer.astro';
 // import SmokeBg from '@/components/other/SmokeBg.astro';
@@ -28,7 +29,8 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<Pattern />
-		 <!-- <SmokeBg /> -->
+		<!-- <SmokeBg /> -->
+		<SpoilerDialog />
 		<div class="max-w-6xl px-2 lg:px-10 mx-auto overflow-x-hidden">
 			<slot />
 			<Footer />
