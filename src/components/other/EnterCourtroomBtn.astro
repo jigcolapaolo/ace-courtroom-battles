@@ -1,0 +1,39 @@
+---
+
+---
+<section class="flex justify-center items-center">
+    <a 
+        id="enter-courtroom"
+        class={`
+            border-sixth border-2 bg-third font-medium uppercase text-lg
+            px-4 py-1 mt-8
+            hover:bg-badge-hover hover:scale-125 hover:text-third transition inline-block
+        `}
+        href="/characters"
+        rel="noopener noreferrer"
+    >
+        Enter Courtroom
+    </a>
+    <audio id="hammer-sound" src="/hammer-sound.mp3" ></audio>
+</section>
+
+<script>
+    import { navigate } from "astro:transitions/client";
+
+    document.addEventListener("astro:page-load", () => {
+        const enterCourtroom = document.getElementById("enter-courtroom") as HTMLAnchorElement;
+
+        if (!enterCourtroom) return
+
+        enterCourtroom.addEventListener("click", (e) => {
+            e.preventDefault();
+            const hammerSound = document.getElementById("hammer-sound") as HTMLAudioElement;
+            enterCourtroom.classList.add("animate-shake");
+            hammerSound.play();
+            
+            hammerSound.onended = () => {
+                navigate("/characters");
+            }
+        })
+    })
+</script>
