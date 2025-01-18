@@ -1,0 +1,40 @@
+---
+import TopArrowIcon from "@/icons/TopArrowIcon.astro";
+
+---
+
+<button 
+    class="fixed opacity-0 bottom-4 transition right-4 rounded-md z-[999999] group" 
+    id="go-to-top-btn"
+>
+    <TopArrowIcon />
+</button>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const goToTopBtn = document.getElementById("go-to-top-btn") as HTMLButtonElement;
+        const container = document.body;
+
+        if (!goToTopBtn) return
+
+
+        const handleScroll = () => {
+            if (container.scrollTop > 0) {
+                goToTopBtn.classList.remove("animate-slide-out-top", "opacity-0");
+                goToTopBtn.classList.add("animate-slide-in-top");
+            } else {
+                goToTopBtn.classList.add("animate-slide-out-top", "opacity-0");
+                goToTopBtn.classList.remove("animate-slide-in-top");
+            }
+        };
+
+        handleScroll();
+
+        container.addEventListener("scroll", handleScroll);
+
+        goToTopBtn.addEventListener("click", () => {
+            container.scrollTo({ top: 0, behavior: "smooth" });
+        })
+    })
+
+</script>
