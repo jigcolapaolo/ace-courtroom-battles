@@ -166,8 +166,9 @@ const { id, firstName } = Astro.props
                     
                 }
 
+                const rootUrl = import.meta.env.DEV ? "http://localhost:4321" : "https://ace-courtroom-battles.vercel.app"
 
-                fetch(`/api/rank/${characterId}`, {
+                fetch(`${rootUrl}/api/rank/${characterId}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

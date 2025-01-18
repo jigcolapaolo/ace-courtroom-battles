@@ -5,10 +5,11 @@ import Layout from "@/layouts/Layout.astro";
 import type { CharacterRanking } from "@/env";
 import { RANK_TYPES } from "@/lib/consts";
 
+const rootUrl = import.meta.env.DEV ? "http://localhost:4321" : "https://ace-courtroom-battles.vercel.app"
 
 let characterRankings: CharacterRanking[] = []
 characterRankings = 
-await fetch("http://localhost:4321/api/rankings/get-all-rankings.json", {
+await fetch(`${rootUrl}/api/rankings/get-all-rankings.json`, {
     method: "GET",
     headers: {
         "Content-Type": "application/json",
