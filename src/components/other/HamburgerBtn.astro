@@ -10,7 +10,7 @@ import NavbarLinks from "../sections/NavbarLinks.astro";
     <HamburgerIcon />
 </button>
 
-<dialog open={false} class="clip-dialog relative md:hidden h-screen w-screen bg-transparent backdrop:bg-black-70 backdrop:backdrop-blur-xl">
+<dialog open={false} class="clip-dialog fixed md:hidden h-screen w-screen bg-transparent backdrop:bg-black-70 backdrop:backdrop-blur-xl">
     <button class="modal-close absolute top-0 right-0" aria-label="Close dialog">
         <CrossIcon />
     </button>
@@ -23,24 +23,25 @@ import NavbarLinks from "../sections/NavbarLinks.astro";
         const clipDialog = document.querySelector('.clip-dialog') as HTMLDialogElement
         const hamburgerBtn = document.querySelector('.hamburger') as HTMLDivElement
         const crossBtn = document.querySelector('.modal-close') as HTMLButtonElement
+        
     
         
         hamburgerBtn.addEventListener('click', () => {
             clipDialog.showModal()
             hamburgerBtn.classList.toggle('open')
-            document.body.style.overflow = 'hidden'
+            document.body.style.overflowY = 'hidden'
         })
 
         crossBtn.addEventListener('click', () => {
             clipDialog.close()
             hamburgerBtn.classList.toggle('open')
-            document.body.style.overflow = 'auto'
+            document.body.style.overflowY = 'auto'
         })
 
         window.addEventListener('resize', () => {
             clipDialog.close()
             hamburgerBtn.classList.remove('open')
-            document.body.style.overflow = 'auto'
+            document.body.style.overflowY = 'auto'
         })
 
     });
