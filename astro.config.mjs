@@ -5,7 +5,7 @@ import tailwind from '@astrojs/tailwind';
 
 import auth from 'auth-astro';
 
-import netlify from '@astrojs/netlify';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,5 +16,5 @@ export default defineConfig({
   },
 
   base: '/',
-  adapter: netlify()
+  adapter: vercel()
 });

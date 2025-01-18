@@ -24,7 +24,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Local Netlify folder
-.netlify
+# Local Vercel folder
+.vercel
 
 prisma/migrations
