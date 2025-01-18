@@ -100,7 +100,8 @@ const { id, firstName } = Astro.props
 <script>
     import { RANK_TYPES } from "@/lib/consts";
 
-    document.addEventListener("astro:page-load", () => {
+    document.addEventListener("DOMContentLoaded", () => {
+
         const rankButtons = document.querySelectorAll(".rank-character") as NodeListOf<HTMLButtonElement>;
         const snapSound = document.getElementById("snap-sound") as HTMLAudioElement;
         const damageSound = document.getElementById("damage-sound") as HTMLAudioElement;
@@ -195,7 +196,8 @@ const { id, firstName } = Astro.props
 <script>
     const { signIn, signOut } = await import('auth-astro/client')
     
-    document.addEventListener("astro:page-load", async () => {
+    document.addEventListener("DOMContentLoaded", () => {
+
 
         const loginButton = document.querySelector("#login") as HTMLButtonElement
         const logoutButton = document.querySelector("#logout") as HTMLButtonElement

@@ -49,7 +49,8 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 </section>
 
 <script>
-    document.addEventListener("astro:page-load", () => {
+document.addEventListener("DOMContentLoaded", () => {
+
             
         const charLinks = document.querySelectorAll('.character-link');
         const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
