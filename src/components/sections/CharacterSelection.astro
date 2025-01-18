@@ -17,6 +17,8 @@ const lastSevenCharacters = CHARACTERS.slice(7);
             <CharacterSelectionList characterList={firstSevenCharacters} />
             <header class="relative flex w-full lg:w-[40%] flex-col items-center justify-center">
                 <img 
+                    decoding="async"
+                    loading="eager"
                     transition:name="character-img-lg"
                     class="character-img-lg w-[300px] h-[400px]" 
                     alt="Image of Character" 
