@@ -7,11 +7,7 @@
     "build": "astro build --remote",
     "host": "astro dev --host",
     "preview": "astro preview",
-    "astro": "astro",
-    "generate:dev": "prisma generate --schema=./prisma/schema.development.prisma",
-    "generate:prod": "prisma generate --schema=./prisma/schema.production.prisma",
-    "migrate:dev": "prisma migrate dev --schema=./prisma/schema.development.prisma",
-    "migrate:prod": "prisma migrate deploy --schema=./prisma/schema.production.prisma"
+    "astro": "astro"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

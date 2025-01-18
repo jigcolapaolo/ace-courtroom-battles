@@ -7,9 +7,14 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
+
+// datasource db {
+//   provider = "sqlserver"
+//   url      = env("DATABASE_URL")
+// }
 
 
 
