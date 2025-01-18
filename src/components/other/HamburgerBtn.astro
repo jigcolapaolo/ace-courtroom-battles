@@ -24,7 +24,7 @@ import NavbarLinks from "../sections/NavbarLinks.astro";
         const hamburgerBtn = document.querySelector('.hamburger') as HTMLDivElement
         const crossBtn = document.querySelector('.modal-close') as HTMLButtonElement
         
-    
+        if (!clipDialog || !hamburgerBtn || !crossBtn) return
         
         hamburgerBtn.addEventListener('click', () => {
             clipDialog.showModal()
