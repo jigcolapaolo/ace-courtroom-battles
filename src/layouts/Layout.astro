@@ -1,9 +1,9 @@
 ---
+import GoToTopBtn from '@/components/other/GoToTopBtn.astro';
 import Pattern from '@/components/other/Pattern.astro';
 import SpoilerDialog from '@/components/other/SpoilerDialog.astro';
 import Toast from '@/components/other/Toast.astro';
 import Footer from '@/components/sections/Footer.astro';
-// import SmokeBg from '@/components/other/SmokeBg.astro';
 import '@fontsource-variable/jost'
 import { ClientRouter } from 'astro:transitions';
 
@@ -29,24 +29,24 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<Pattern />
-		<!-- <SmokeBg /> -->
 		<SpoilerDialog />
-		<div class="max-w-6xl px-2 lg:px-10 mx-auto overflow-x-hidden">
+		<div id="app-container" class="max-w-6xl px-2 lg:px-10 mx-auto overflow-x-hidden">
 			<slot />
 			<Footer />
 			<Toast />
+			<GoToTopBtn />
 		</div>
 	</body>
 </html>
 
-<script type="importmap">
+<!-- <script type="importmap">
 	{
 	  "imports": {
 		"three": "https://cdn.jsdelivr.net/npm/three@v0.171.0/build/three.module.js",
 		"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.171.0/examples/jsm/"
 	  }
 	}
-</script>
+</script> -->
 
 <style is:global>
 	@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
@@ -71,6 +71,7 @@ const { title } = Astro.props;
 		width: 100%;
 		height: 100%;
 		font-family: Georgia,'Times New Roman','Jost Variable',system-ui, sans-serif;
+		overflow-y: auto;
 	}
 
 	html {
