@@ -15,5 +15,6 @@ export default defineConfig({
     enabled: false
   },
 
+  base: '/',
   adapter: netlify()
 });
