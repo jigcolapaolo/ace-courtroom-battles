@@ -1,7 +1,7 @@
 ---
 ---
 
-<dialog open={false} class="spoiler-dialog w-screen h-[200vh] bg-transparent backdrop:bg-black-70 backdrop:backdrop-blur-xl">
+<dialog open={false} class="spoiler-dialog opacity-0 w-screen h-[200vh] bg-transparent backdrop:bg-black-70 backdrop:backdrop-blur-xl">
     <article class="w-[100%] md:w-[40%] flex flex-col justify-center items-center gap-y-4 p-8 bg-third text-secondary">
         <h3 class="text-2xl font-semibold text-badge text-center">
             Spoiler Warning!
@@ -27,6 +27,7 @@ import { navigate } from "astro:transitions/client";
 
         if (!hasVisited) {
             spoilerDialog.showModal();
+            spoilerDialog.classList.remove('opacity-0')
         } else {
             spoilerDialog.close();
             spoilerDialog.remove()
