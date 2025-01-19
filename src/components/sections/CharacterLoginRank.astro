@@ -193,32 +193,33 @@ const { id, firstName } = Astro.props
 </script>
 
 <script>
+(async () => {
+    const { signIn, signOut } = await import('auth-astro/client');
+    
     function initUserLogin() {
-        import('auth-astro/client').then(({ signIn, signOut }) => {
-            const loginButton = document.querySelector("#login") as HTMLButtonElement;
-            const logoutButton = document.querySelector("#logout") as HTMLButtonElement;
+        const loginButton = document.querySelector("#login") as HTMLButtonElement;
+        const logoutButton = document.querySelector("#logout") as HTMLButtonElement;
 
-            if (!loginButton || !logoutButton) return;
+        if (!loginButton || !logoutButton) return;
 
-            loginButton.addEventListener('click', () => {
-                signIn("google");
-                loginButton.ariaDisabled = "true";
-                loginButton.disabled = true;
-                loginButton.textContent = "Logging in...";
-            });
-
-            logoutButton.addEventListener('click', () => signOut());
-        }).catch((error) => {
-            console.error("Error importing auth-astro client:", error);
+        loginButton.addEventListener('click', () => {
+            signIn("google");
+            loginButton.ariaDisabled = "true";
+            loginButton.disabled = true;
+            loginButton.textContent = "Logging in...";
         });
+
+        logoutButton.addEventListener('click', () => signOut());
     }
 
     document.addEventListener("astro:page-load", initUserLogin);
     document.addEventListener("astro:after-swap", initUserLogin);
 
     initUserLogin();
-</script>
+})();
 
+
+</script>
 
 <style>
     .is-liked, .is-disliked {
