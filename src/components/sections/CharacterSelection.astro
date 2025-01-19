@@ -49,56 +49,48 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 </section>
 
 <script>
-    async function initUserLogin() {
-        try {
-            console.log("initUserLogin - Start");
-            const { signIn, signOut } = await import('auth-astro/client');
-            console.log("auth-astro/client imported");
 
-            const loginButton = document.querySelector("#login") as HTMLButtonElement;
-            const logoutButton = document.querySelector("#logout") as HTMLButtonElement;
+function initCharacterLinks() {
+    const charLinks = document.querySelectorAll('.character-link');
+    const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
+    const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
+    const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
 
-            if (!loginButton || !logoutButton) {
-                console.log("Buttons not found");
-                return;
-            }
+    if (!charLinks || !charTitle || !charImgLg || !charBadge) return;
 
-            console.log("Buttons found");
+    charLinks.forEach(link => {
+        link.addEventListener('mouseenter', handleMouseEnter);
+        link.addEventListener('touchstart', handleTouchStart);
+    });
 
-            function updateLoginButton() {
-                console.log("Login button clicked");
-                signIn("google");
-                loginButton.ariaDisabled = "true";
-                loginButton.disabled = true;
-                loginButton.textContent = "Logging in...";
-            }
-
-            loginButton.addEventListener('click', () => {
-                console.log("Adding click event to login button");
-                updateLoginButton();
-            });
-
-            logoutButton.addEventListener('click', () => {
-                console.log("Logout button clicked");
-                signOut();
-            });
-
-        } catch (error) {
-            console.error("Error in initUserLogin:", error);
-        }
+    function handleMouseEnter(event: Event) {
+        event.preventDefault();
+        updateCharacterDisplay(event.currentTarget as HTMLElement);
     }
 
-    console.log("Adding event listeners for page load");
-    document.addEventListener("astro:page-load", () => {
-        console.log("astro:page-load triggered");
-        initUserLogin();
-    });
+    function handleTouchStart(event: Event) {
+        updateCharacterDisplay(event.currentTarget as HTMLElement);
+    }
 
-    document.addEventListener("astro:after-swap", () => {
-        console.log("astro:after-swap triggered");
-        initUserLogin();
-    });
+    function updateCharacterDisplay(target: HTMLElement) {
+        const { name, type } = target.dataset as { name: string; type: string; };
+        const charFirstName = name?.split(' ')[0].toLowerCase();
+        const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
+        const characterBadgeSrc = `/badges/${type}-badge.webp`;
 
-    console.log("Calling initUserLogin initially");
-    initUserLogin();
+        charImgLg.src = characterImgSrc;
+        charBadge.src = characterBadgeSrc;
+        charTitle.textContent = name as string;
+
+        charImgLg.alt = `Picture of ${name}`;
+        charBadge.alt = `${type} badge`;
+    }
+}
+
+document.addEventListener("astro:page-load", initCharacterLinks);
+document.addEventListener("astro:after-swap", initCharacterLinks);
+
+initCharacterLinks();
+
+
 </script>
