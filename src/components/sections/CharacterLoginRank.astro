@@ -199,14 +199,17 @@ const { id, firstName } = Astro.props
 
         const loginButton = document.querySelector("#login") as HTMLButtonElement
         const logoutButton = document.querySelector("#logout") as HTMLButtonElement
+
+        if (!loginButton || !logoutButton) return
     
-        if (loginButton) loginButton.onclick = () => {
+        loginButton.addEventListener('click', () => {
             signIn("google")
             loginButton.ariaDisabled = "true"
             loginButton.disabled = true
             loginButton.textContent = "Logging in..."
-        }
-        if (logoutButton) logoutButton.onclick = () => signOut()
+        })
+
+        logoutButton.addEventListener('click', () => signOut())
     })
 
 </script>
