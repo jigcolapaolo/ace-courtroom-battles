@@ -9,6 +9,7 @@ const { imgUrl } = Astro.props
 <div style={
     `background-image: url('${imgUrl}');`
 }></div>
+<img src={imgUrl} loading="eager" alt="Preloading background" style="display: none;" />
 
 
 <style>

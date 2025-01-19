@@ -49,50 +49,45 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 </section>
 
 <script>
-    document.addEventListener("astro:page-load", () => {
-            
-        const charLinks = document.querySelectorAll('.character-link') as NodeListOf<HTMLAnchorElement>;
-        const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
-        const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
-        const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
+document.addEventListener("astro:page-load", initCharacterLinks);
+document.addEventListener("astro:after-swap", initCharacterLinks);
 
+function initCharacterLinks() {
+    const charLinks = document.querySelectorAll('.character-link');
+    const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
+    const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
+    const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
 
-        // if (!charLinks || !charTitle || !charImgLg || !charBadge) return
-    
-        charLinks.forEach(link => {
-            link.addEventListener('mouseenter', (event) => {
-                event.preventDefault();
-                const { name, type } = (event.currentTarget as HTMLElement).dataset as { name: string; type: string; };
-                const charFirstName = name?.split(' ')[0].toLowerCase();
-                const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
-                const characterBadgeSrc = `/badges/${type}-badge.webp`;
-    
-                charImgLg.src = characterImgSrc;
-                charBadge.src = characterBadgeSrc;
-                charTitle.textContent = name as string;
-    
-                charImgLg.alt = `Picture of ${name}`;
-                charBadge.alt = `${type} badge`;
-            })
-        })
+    if (!charLinks || !charTitle || !charImgLg || !charBadge) return;
 
-        charLinks.forEach(link => {
-            link.addEventListener('touchstart', (event) => {
+    charLinks.forEach(link => {
+        link.addEventListener('mouseenter', handleMouseEnter);
+        link.addEventListener('touchstart', handleTouchStart);
+    });
 
-                const { name, type } = (event.currentTarget as HTMLElement).dataset as { name: string; type: string; };
-                const charFirstName = name?.split(' ')[0].toLowerCase();
-                const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
-                const characterBadgeSrc = `/badges/${type}-badge.webp`;
-    
-                charImgLg.src = characterImgSrc;
-                charBadge.src = characterBadgeSrc;
-                charTitle.textContent = name as string;
-    
-                charImgLg.alt = `Picture of ${name}`;
-                charBadge.alt = `${type} badge`;
-            })
-        })
-        
-    })
+    function handleMouseEnter(event: Event) {
+        event.preventDefault();
+        updateCharacterDisplay(event.currentTarget as HTMLElement);
+    }
+
+    function handleTouchStart(event: Event) {
+        updateCharacterDisplay(event.currentTarget as HTMLElement);
+    }
+
+    function updateCharacterDisplay(target: HTMLElement) {
+        const { name, type } = target.dataset as { name: string; type: string; };
+        const charFirstName = name?.split(' ')[0].toLowerCase();
+        const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
+        const characterBadgeSrc = `/badges/${type}-badge.webp`;
+
+        charImgLg.src = characterImgSrc;
+        charBadge.src = characterBadgeSrc;
+        charTitle.textContent = name as string;
+
+        charImgLg.alt = `Picture of ${name}`;
+        charBadge.alt = `${type} badge`;
+    }
+}
+
 
 </script>
