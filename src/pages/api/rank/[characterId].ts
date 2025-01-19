@@ -17,7 +17,7 @@ const res = (
 
 export const POST: APIRoute = async ({ params, request }) => {
     const session = await getSession(request)
-    if (!session || session?.user?.id == null) {
+    if (!session || session?.user?.email == null) {
         return res("Unauthorized", { status: 401 })
     }
 
@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ params, request }) => {
     const { rankId, characterFirstName } = output
 
 
-    const userId = session.user.id
+    const userId = session.user.email
     const createdAt = new Date()
 
     const newId = `${userId}-${characterId}`

@@ -12,7 +12,7 @@ interface Props {
 
 const session = await getSession(Astro.request)
 
-const userId = session?.user?.email
+const userId = session?.user?.email?.toString()
 const rankings = userId == null ?
     [] : 
     await prisma.rankings.findMany({
