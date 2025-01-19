@@ -49,8 +49,6 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 </section>
 
 <script>
-document.addEventListener("astro:page-load", initCharacterLinks);
-document.addEventListener("astro:after-swap", initCharacterLinks);
 
 function initCharacterLinks() {
     const charLinks = document.querySelectorAll('.character-link');
@@ -88,6 +86,11 @@ function initCharacterLinks() {
         charBadge.alt = `${type} badge`;
     }
 }
+
+document.addEventListener("astro:page-load", initCharacterLinks);
+document.addEventListener("astro:after-swap", initCharacterLinks);
+
+initCharacterLinks();
 
 
 </script>
