@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build --remote",
+    "buildev": "npm run build && npm run dev --devOutput",
     "host": "astro dev --host",
     "preview": "astro preview",
     "astro": "astro"

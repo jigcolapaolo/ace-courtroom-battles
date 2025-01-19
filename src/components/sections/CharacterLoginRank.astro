@@ -11,6 +11,7 @@ interface Props {
 }
 
 const session = await getSession(Astro.request)
+console.log(session)
 
 const userId = session?.user?.id
 const rankings = userId == null ?
@@ -99,8 +100,14 @@ const { id, firstName } = Astro.props
 
 <script>
     import { RANK_TYPES } from "@/lib/consts";
+import { navigate } from "astro:transitions/client";
 
     document.addEventListener("astro:page-load", () => {
+        initRankButtons()
+        initUserLogin()
+    })
+
+    function initRankButtons() {
         const rankButtons = document.querySelectorAll(".rank-character") as NodeListOf<HTMLButtonElement>;
         const snapSound = document.getElementById("snap-sound") as HTMLAudioElement;
         const damageSound = document.getElementById("damage-sound") as HTMLAudioElement;
@@ -188,37 +195,34 @@ const { id, firstName } = Astro.props
                 .catch(() => rollBackUI())
             }
         })
-    })
+    }
 
-</script>
-
-<script>
     const { signIn, signOut } = await import('auth-astro/client')
     
     function initUserLogin() {
-
         const loginButton = document.querySelector("#login") as HTMLButtonElement
         const logoutButton = document.querySelector("#logout") as HTMLButtonElement
-
-        console.log(loginButton, logoutButton)
     
-        if (loginButton) loginButton.onclick = () => {
-            signIn("google")
+        if (loginButton) loginButton.onclick = async () => {
             loginButton.ariaDisabled = "true"
             loginButton.disabled = true
             loginButton.textContent = "Logging in..."
+            try {
+                await signIn("google")
+                navigate(window.location.pathname)
+            }
+            catch {
+                loginButton.textContent = "Error logging in"
+                loginButton.disabled = false
+                loginButton.ariaDisabled = "false"
+            }
         }
-        if (logoutButton) logoutButton.onclick = () => signOut()
+        if (logoutButton) logoutButton.onclick = async () => await signOut()
     }
 
-    document.addEventListener("astro:page-load", async () => {
-        initUserLogin()
-    })
-    document.addEventListener("astro:after-swap", async () => {
-        initUserLogin()
-    })
-
 </script>
+
+
 
 <style>
     .is-liked, .is-disliked {
