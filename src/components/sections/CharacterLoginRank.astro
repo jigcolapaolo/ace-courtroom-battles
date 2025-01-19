@@ -195,11 +195,11 @@ const { id, firstName } = Astro.props
 <script>
     const { signIn, signOut } = await import('auth-astro/client')
     
-    document.addEventListener("astro:page-load", async () => {
-
+    function initUserLogin() {
+        
         const loginButton = document.querySelector("#login") as HTMLButtonElement
         const logoutButton = document.querySelector("#logout") as HTMLButtonElement
-
+    
         if (!loginButton || !logoutButton) return
     
         loginButton.addEventListener('click', () => {
@@ -208,9 +208,14 @@ const { id, firstName } = Astro.props
             loginButton.disabled = true
             loginButton.textContent = "Logging in..."
         })
-
+    
         logoutButton.addEventListener('click', () => signOut())
-    })
+    }
+
+    document.addEventListener("astro:page-load", initUserLogin)
+    document.addEventListener("astro:after-swap", initUserLogin)
+
+    initUserLogin()
 
 </script>
 
