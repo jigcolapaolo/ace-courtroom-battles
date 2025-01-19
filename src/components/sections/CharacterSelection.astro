@@ -51,13 +51,13 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 <script>
     document.addEventListener("astro:page-load", () => {
             
-        const charLinks = document.querySelectorAll('.character-link');
+        const charLinks = document.querySelectorAll('.character-link') as NodeListOf<HTMLAnchorElement>;
         const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
         const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
         const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
 
 
-        if (!charLinks || !charTitle || !charImgLg || !charBadge) return
+        // if (!charLinks || !charTitle || !charImgLg || !charBadge) return
     
         charLinks.forEach(link => {
             link.addEventListener('mouseenter', (event) => {
