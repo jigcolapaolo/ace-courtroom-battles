@@ -50,80 +50,47 @@ const lastSevenCharacters = CHARACTERS.slice(7);
 
 <script>
 
-function initCharacterLinks() {
-    console.log("Initializing character links...");
+    function initCharacterLinks() {
+        const charLinks = document.querySelectorAll('.character-link');
+        const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
+        const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
+        const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
 
-    const charLinks = document.querySelectorAll('.character-link');
-    const charTitle = document.querySelector('.character-title') as HTMLHeadingElement;
-    const charImgLg = document.querySelector('.character-img-lg') as HTMLImageElement;
-    const charBadge = document.querySelector('.character-badge') as HTMLImageElement;
+        if (!charLinks || !charTitle || !charImgLg || !charBadge) return;
 
-    console.log({
-        charLinksLength: charLinks.length,
-        charTitleExists: !!charTitle,
-        charImgLgExists: !!charImgLg,
-        charBadgeExists: !!charBadge,
-    });
+        charLinks.forEach(link => {
+            link.addEventListener('mouseenter', handleMouseEnter);
+            link.addEventListener('touchstart', handleTouchStart);
+        });
 
-    if (!charLinks || !charTitle || !charImgLg || !charBadge) {
-        console.warn("Some elements are missing. Initialization skipped.");
-        return;
-    }
-
-    charLinks.forEach(link => {
-        console.log("Adding event listeners to:", link);
-        link.addEventListener('mouseenter', handleMouseEnter);
-        link.addEventListener('touchstart', handleTouchStart);
-    });
-
-    function handleMouseEnter(event: Event) {
-        console.log("Mouse enter triggered:", event.currentTarget);
-        event.preventDefault();
-        updateCharacterDisplay(event.currentTarget as HTMLElement);
-    }
-
-    function handleTouchStart(event: Event) {
-        console.log("Touch start triggered:", event.currentTarget);
-        updateCharacterDisplay(event.currentTarget as HTMLElement);
-    }
-
-    function updateCharacterDisplay(target: HTMLElement) {
-        const { name, type } = target.dataset as { name: string; type: string; };
-        console.log("Updating display for:", { name, type });
-
-        if (!name || !type) {
-            console.warn("Missing dataset values:", target.dataset);
-            return;
+        function handleMouseEnter(event: Event) {
+            event.preventDefault();
+            updateCharacterDisplay(event.currentTarget as HTMLElement);
         }
 
-        const charFirstName = name.split(' ')[0].toLowerCase();
-        const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
-        const characterBadgeSrc = `/badges/${type}-badge.webp`;
+        function handleTouchStart(event: Event) {
+            updateCharacterDisplay(event.currentTarget as HTMLElement);
+        }
 
-        console.log("Setting image sources:", { characterImgSrc, characterBadgeSrc });
+        function updateCharacterDisplay(target: HTMLElement) {
+            const { name, type } = target.dataset as { name: string; type: string; };
+            const charFirstName = name?.split(' ')[0].toLowerCase();
+            const characterImgSrc = `/characters/${charFirstName}-lg-select.webp`;
+            const characterBadgeSrc = `/badges/${type}-badge.webp`;
 
-        charImgLg.src = characterImgSrc;
-        charBadge.src = characterBadgeSrc;
-        charTitle.textContent = name as string;
+            charImgLg.src = characterImgSrc;
+            charBadge.src = characterBadgeSrc;
+            charTitle.textContent = name as string;
 
-        charImgLg.alt = `Picture of ${name}`;
-        charBadge.alt = `${type} badge`;
+            charImgLg.alt = `Picture of ${name}`;
+            charBadge.alt = `${type} badge`;
+        }
     }
-}
 
-document.addEventListener("astro:page-load", () => {
-    console.log("astro:page-load triggered.");
+    document.addEventListener("astro:page-load", initCharacterLinks);
+    document.addEventListener("astro:after-swap", initCharacterLinks);
+
     initCharacterLinks();
-});
-
-document.addEventListener("astro:after-swap", () => {
-    console.log("astro:after-swap triggered.");
-    initCharacterLinks();
-});
-
-// Llamada directa en caso de carga inicial
-console.log("Calling initCharacterLinks directly.");
-initCharacterLinks();
 
 
 </script>
