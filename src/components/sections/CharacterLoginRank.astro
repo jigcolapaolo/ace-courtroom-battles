@@ -11,9 +11,8 @@ interface Props {
 }
 
 const session = await getSession(Astro.request)
-console.log(session)
 
-const userId = session?.user?.id
+const userId = session?.user?.email
 const rankings = userId == null ?
     [] : 
     await prisma.rankings.findMany({
@@ -100,7 +99,6 @@ const { id, firstName } = Astro.props
 
 <script>
     import { RANK_TYPES } from "@/lib/consts";
-import { navigate } from "astro:transitions/client";
 
     document.addEventListener("astro:page-load", () => {
         initRankButtons()
@@ -209,7 +207,6 @@ import { navigate } from "astro:transitions/client";
             loginButton.textContent = "Logging in..."
             try {
                 await signIn("google")
-                navigate(window.location.pathname)
             }
             catch {
                 loginButton.textContent = "Error logging in"

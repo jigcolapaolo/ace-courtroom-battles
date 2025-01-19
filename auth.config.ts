@@ -10,17 +10,22 @@ export default defineConfig({
         // }),
         Google({
             clientId: import.meta.env.GOOGLE_CLIENT_ID,
-            clientSecret: import.meta.env.GOOGLE_CLIENT_SECRET
+            clientSecret: import.meta.env.GOOGLE_CLIENT_SECRET,
+            async profile(profile) {
+                return {
+                    name: profile.name,
+                    email: profile.sub,
+                    image: profile.picture,
+                }
+            }
         })
     ],
-	callbacks: {
-		session: ({ session, token }) => ({
-			...session,
-			user: {
-				...session.user,
-				id: token.sub,
-			},
-		}),
-	},
-
+    callbacks: {
+        session: ({ session }) => ({
+            ...session,
+            user: {
+                ...session.user,
+            },
+        }),
+    },
 })
