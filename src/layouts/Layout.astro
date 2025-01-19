@@ -23,7 +23,7 @@ const imgUrls = CHARACTERS.map(({ name }) => name.split(' ')[0].toLowerCase());
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/ace-icon.webp" />
-		{ imgUrls.map((imgUrl) => ( <link rel="preload" href={`/characters/${imgUrl}.webp`} as="image" /> )) }
+		{ imgUrls.map((imgUrl) => ( <link rel="preload" href={`/characters/${imgUrl}-lg-select.webp`} as="image" /> )) }
 		<meta 
 			name="description" 
 			content="Relive the legendary battles between attorneys and prosecutors in the courtroom"
