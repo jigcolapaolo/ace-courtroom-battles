@@ -28,3 +28,9 @@ pnpm-debug.log*
 .vercel
 
 prisma/migrations
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
