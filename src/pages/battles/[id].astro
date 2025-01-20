@@ -1,6 +1,7 @@
 ---
 import CaseTyping from "@/components/other/CaseTyping.astro";
 import CourtroomBg from "@/components/other/CourtroomBg.astro";
+import SoundToggler from "@/components/other/SoundToggler.astro";
 import TrialVideo from "@/components/other/TrialVideo.astro";
 import VersusText from "@/components/other/VersusText.astro";
 import Navbar from "@/components/sections/Navbar.astro";
@@ -54,6 +55,7 @@ const prosecutorInverted = prosecutorFirstName === "miles"
 
 <Layout title=`Battles - ${attorney} vs ${prosecutor}`>
     <Navbar />
+    <SoundToggler />
     <main class="my-10">
         <section class="flex justify-between items-center relative">
 

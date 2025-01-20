@@ -1,0 +1,68 @@
+---
+import SoundOffIcon from "@/icons/SoundOffIcon.astro";
+import SoundOnIcon from "@/icons/SoundOnIcon.astro";
+
+---
+
+<button id="sound-toggler" class="fixed bottom-2 left-2 transition group z-[9999999]">
+    <SoundOnIcon />
+    <SoundOffIcon />
+</button>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        initSoundToggler();
+    })
+
+    function initSoundToggler() {
+
+        const soundToggler = document.getElementById("sound-toggler") as HTMLButtonElement;
+        const soundOnIcon = document.getElementById("sound-on-icon") as HTMLElement;
+        const soundOffIcon = document.getElementById("sound-off-icon") as HTMLElement;
+        const courtroomTheme = document.getElementById("courtroom-theme") as HTMLAudioElement;
+
+
+        if (!soundToggler || !soundOnIcon || !soundOffIcon) return
+
+
+        const isSoundOn = localStorage.getItem("isSoundOn") === "true";
+
+        if (isSoundOn) {
+            courtroomTheme.currentTime = 0;
+            courtroomTheme.play();
+            soundOnIcon.classList.remove("opacity-0");
+            soundOnIcon.classList.add("opacity-100");
+            soundOffIcon.classList.remove("opacity-100");
+            soundOffIcon.classList.add("opacity-0");
+        } else {
+            courtroomTheme.pause();
+            soundOnIcon.classList.remove("opacity-100");
+            soundOnIcon.classList.add("opacity-0");
+            soundOffIcon.classList.remove("opacity-0");
+            soundOffIcon.classList.add("opacity-100");
+        }
+
+        soundToggler.addEventListener("click", () => {
+            const isSoundOn = localStorage.getItem("isSoundOn") === "true";
+
+            if (isSoundOn) {
+                courtroomTheme.pause();
+                localStorage.setItem("isSoundOn", "false");
+                soundOnIcon.classList.remove("opacity-100");
+                soundOnIcon.classList.add("opacity-0");
+                soundOffIcon.classList.remove("opacity-0");
+                soundOffIcon.classList.add("opacity-100");
+            } else {
+                courtroomTheme.currentTime = 0;
+                courtroomTheme.play();
+                localStorage.setItem("isSoundOn", "true");
+                soundOnIcon.classList.remove("opacity-0");
+                soundOnIcon.classList.add("opacity-100");
+                soundOffIcon.classList.remove("opacity-100");
+                soundOffIcon.classList.add("opacity-0");
+            }
+        })
+
+    }
+
+</script>
