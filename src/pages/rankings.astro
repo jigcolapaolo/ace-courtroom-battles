@@ -41,7 +41,7 @@ await fetch(`${rootUrl}/api/rankings/get-all-rankings.json`, {
         <article class="my-20 flex flex-col gap-y-20">
             {
                 characterRankings && characterRankings.map(({ characterId, characterFirstName, totalRankings, ranks }) => 
-                    <div class="flex justify-center items-center gap-x-4">
+                    <div class="character-data flex justify-center items-center gap-x-4">
                         <div class="flex flex-col items-center justify-center relative">
                             <a 
                                 class="character-link"
@@ -65,7 +65,7 @@ await fetch(`${rootUrl}/api/rankings/get-all-rankings.json`, {
                                 likes={ranks[RANK_TYPES.LIKE]} 
                                 dislikes={ranks[RANK_TYPES.DISLIKE]} 
                             />
-                            <p class="text-center">Total Feedback: {totalRankings}</p>  
+                            <p class="total-rankings text-center">Total Feedback: <span>{totalRankings}</span></p>  
 
                         </div>
                     </div>
