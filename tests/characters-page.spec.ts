@@ -27,7 +27,6 @@ test('Should show navbar (logo and links)', async ({ page }) => {
     await expect(charactersLink).toContainText('CHARACTERS');
     await expect(battlesLink).toContainText('BATTLES');
     await expect(rankingsLink).toContainText('RANKINGS');
-
 })
 
 test('Should show page title', async ({ page }) => {
