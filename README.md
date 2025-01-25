@@ -1,48 +1,82 @@
-# Astro Starter Kit: Basics
+# Ace Courtroom Battles <img src="https://github.com/user-attachments/assets/cead3c62-c674-4b58-a0d8-67eafa6c7b95" alt="Ace Attorney Logo" width="50" height="50" />
 
-```sh
-npm create astro@latest -- --template basics
-```
+Ace Courtroom Battles is a responsive web application built with **Astro**, inspired by the Ace Attorney series. This project was created as a final showcase of my full-stack development skills, highlighting features such as character interactions, review of the courtroom battles, and user-driven voting. It combines modern technologies to deliver an engaging and dynamic experience.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## 🚀 Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **Interactive Pages**: Includes dynamic animations, sound effects, and a logo inspired by Ace Attorney.
+- **Character Profiles**: Browse attorneys and prosecutors with hover effects, view individual profiles, and interact with their voice lines.
+- **Rankings**: Users can log in with Google Auth and vote for their favorite characters. The app displays rankings with real-time data.
+- **Courtroom Battles**: Detailed pages showcasing iconic courtroom battles, complete with case information, visual dialogue interactions, and background music.
+- **Highlights Section**: Watch videos of full courtroom cases directly on the website.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## 🛠️ Tech Stack
 
-## 🚀 Project Structure
+- **Framework**: Astro
+- **Authentication**: Astro Auth (Google Auth0)
+- **Styles**: CSS and Tailwind
+- **Language**: TypeScript
+- **Database**: 
+  - **Primary**: Turso DB
+  - **Local**: SQL Server (switchable)
+- **ORM**: Prisma
+- **Deployment**: Vercel
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ Installation and Configuration
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+To run the project locally, follow these steps:
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+### Clone the repository
 
-## 🧞 Commands
+````
+git clone https://github.com/jigcolapaolo/ace-courtroom-battles.git
+````
 
-All commands are run from the root of the project, from a terminal:
+### Install dependencies
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+````
+npm install --force
+````
 
-## 👀 Want to learn more?
+> [!NOTE]  
+> Use the --force flag to avoid dependency conflicts when installing or removing packages.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+### Database Configuration
+This project allows you to switch between **Turso DB** and **SQL Server** for the database. To change databases:
+
+1. Comment/uncomment the relevant code in:
+   - `prisma/schema.prisma`
+   - `prisma/client.ts`
+2. Run the following command every time you switch:
+````
+npx prisma generate
+````
+
+## 🧞 Astro Commands
+
+
+| Command                   | Action                                              |
+| :------------------------ | :-----------------------------------------------    |
+| `npm install`             | Install dependencies                                |
+| `npm run dev`             | Starts the local development server at `localhost:4321`     |
+| `npm run build`           | Builds the app for production in `./dist/`          |
+| `npm run astro ...`       | Runs Astro CLI commands, such as `astro add`, `astro check`|
+| `npm run astro -- --help` | Displays help for the Astro CLI                     |
+
+
+## 🧪 Tests
+
+This app includes end-to-end (E2E) testing with Playwright.
+
+### Run E2E Tests with Playwright
+
+
+To run all tests:
+````
+npx playwright test
+````
+To run tests with a UI:
+````
+npx playwright test --ui
+````
