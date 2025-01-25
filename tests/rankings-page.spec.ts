@@ -7,13 +7,6 @@ test.beforeEach(async ({ page }) => {
     await page.goto('/rankings');
 })
 
-/*
-
-
-
-
-*/
-
 test('Should show navbar (logo and links)', async ({ page }) => {
     const logo = page.locator('[alt="Ace Logo"]');
     const navbarLinks = page.locator('nav').locator('a');
